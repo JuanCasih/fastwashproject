@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "fastwash-static",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/Users/juancruzcasih/Desktop/fastwashproject/tools/serve.py", "8766"],
+      "port": 8766
+    }
+  ]
+}
