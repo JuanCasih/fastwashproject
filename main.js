@@ -18,17 +18,6 @@
 
   /* ---------- Mounts (idempotent) ---------- */
 
-  function mountFlashStats() {
-    var target = $("[data-flash-stats]");
-    if (!target || target.children.length > 0 || !data.flashStats) return;
-    target.innerHTML = data.flashStats.map(function (s) {
-      return '<div class="flash-stat">' +
-        '<span class="flash-stat-value">' + escHTML(s.value) + '<span class="flash-stat-unit">' + escHTML(s.unit) + '</span></span>' +
-        '<span class="flash-stat-label">' + escHTML(s.label) + '</span>' +
-        '</div>';
-    }).join("");
-  }
-
   function mountComparison() {
     var target = $("[data-comparison]");
     if (!target || target.children.length > 0 || !data.comparison) return;
@@ -100,12 +89,51 @@
     }).join("");
   }
 
+  function formatNum(n) {
+    n = Math.round(n);
+    return n.toLocaleString("es-AR");
+  }
+
+  function marketVisualSVG(visual) {
+    if (visual === "sparkline") {
+      return '<svg class="market-visual market-visual-sparkline" viewBox="0 0 84 30" fill="none">' +
+        '<polyline class="spark-path" points="2,25 18,20 34,22 50,11 66,13 80,3" pathLength="100" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
+        '</svg>';
+    }
+    if (visual === "ring") {
+      return '<svg class="market-visual market-visual-ring" viewBox="0 0 100 100" data-ring>' +
+        '<circle class="ring-track" cx="50" cy="50" r="42" fill="none" stroke-width="9"/>' +
+        '<circle class="ring-fill" cx="50" cy="50" r="42" fill="none" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>' +
+        '</svg>';
+    }
+    if (visual === "bar") {
+      return '<div class="market-visual market-visual-bar"><div class="market-bar-track"><div class="market-bar-fill" data-bar></div></div></div>';
+    }
+    if (visual === "trophy") {
+      return '<svg class="market-visual market-visual-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z"/>' +
+        '<path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 1.8 4.5 4.2 4.9M17 5h3a1 1 0 0 1 1 1c0 2.5-1.8 4.5-4.2 4.9"/>' +
+        '</svg>';
+    }
+    return "";
+  }
+
   function mountMarket() {
     var target = $("[data-market-stats]");
     if (target && target.children.length === 0 && data.marketStats) {
       target.innerHTML = data.marketStats.map(function (s) {
-        return '<div class="market-stat reveal">' +
-          '<span class="market-stat-value">' + escHTML(s.value) + '</span>' +
+        var prefix = s.prefix || "";
+        var suffix = s.suffix || "";
+        var staticBefore = s.showFromStatic
+          ? (prefix + formatNum(s.from) + suffix + " → " + prefix)
+          : prefix;
+        return '<div class="market-stat reveal is-' + escHTML(s.size) + '">' +
+          marketVisualSVG(s.visual) +
+          '<span class="market-stat-value">' +
+          (staticBefore ? '<span class="market-stat-prefix">' + escHTML(staticBefore) + '</span>' : "") +
+          '<span class="market-stat-count" data-count data-from="' + s.from + '" data-to="' + s.to + '">' + escHTML(formatNum(s.from)) + '</span>' +
+          (suffix ? '<span class="market-stat-suffix">' + escHTML(suffix) + '</span>' : "") +
+          '</span>' +
           '<p class="market-stat-label">' + escHTML(s.label) + '</p>' +
           '<span class="market-stat-source">' + escHTML(s.source) + '</span>' +
           '</div>';
@@ -115,6 +143,80 @@
     if (closing && !closing.textContent.trim() && data.marketClosing) {
       closing.textContent = data.marketClosing;
     }
+  }
+
+  /* ---------- Market stats: count-up + ring/bar reveal ---------- */
+
+  function initMarketCountUp() {
+    var cards = $$(".market-stat");
+    if (!cards.length) return;
+
+    var easeOutCubic = function (t) { return 1 - Math.pow(1 - t, 3); };
+
+    var animateCard = function (card) {
+      if (card.dataset.counted) return;
+      card.dataset.counted = "1";
+      var countEl = $("[data-count]", card);
+      var duration = reduced ? 1 : 1200;
+      var start = null;
+
+      if (countEl) {
+        var from = parseFloat(countEl.getAttribute("data-from")) || 0;
+        var to = parseFloat(countEl.getAttribute("data-to")) || 0;
+        var step = function (ts) {
+          if (!start) start = ts;
+          var t = Math.min(1, (ts - start) / duration);
+          var eased = easeOutCubic(t);
+          var val = from + (to - from) * eased;
+          countEl.textContent = formatNum(val);
+          if (t < 1) requestAnimationFrame(step);
+          else countEl.textContent = formatNum(to);
+        };
+        requestAnimationFrame(step);
+      }
+
+      var ring = $("[data-ring] .ring-fill", card);
+      if (ring) {
+        var target = parseFloat(countEl ? countEl.getAttribute("data-to") : 0) || 0;
+        requestAnimationFrame(function () {
+          ring.style.transition = "stroke-dashoffset " + duration + "ms cubic-bezier(0.16,1,0.3,1)";
+          ring.style.strokeDashoffset = String(100 - target);
+        });
+      }
+
+      var bar = $("[data-bar]", card);
+      if (bar) {
+        var barTarget = countEl ? parseFloat(countEl.getAttribute("data-to")) || 0 : 0;
+        requestAnimationFrame(function () {
+          bar.style.transition = "width " + duration + "ms cubic-bezier(0.16,1,0.3,1)";
+          bar.style.width = barTarget + "%";
+        });
+      }
+    };
+
+    if (typeof IntersectionObserver === "undefined") {
+      cards.forEach(animateCard);
+      return;
+    }
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCard(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+
+    cards.forEach(function (card) { io.observe(card); });
+
+    setTimeout(function () {
+      cards.forEach(function (card) {
+        if (!card.dataset.counted && card.getBoundingClientRect().top < window.innerHeight) {
+          animateCard(card);
+        }
+      });
+    }, 6000);
   }
 
   function mountContact() {
@@ -329,7 +431,6 @@
   /* ---------- Boot ---------- */
 
   function boot() {
-    safe(mountFlashStats, "mountFlashStats");
     safe(mountComparison, "mountComparison");
     safe(mountCycle, "mountCycle");
     safe(mountSpecs, "mountSpecs");
@@ -342,6 +443,7 @@
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
     safe(initWashStages, "initWashStages");
+    safe(initMarketCountUp, "initMarketCountUp");
     safe(initTilt, "initTilt");
 
     if (window.gsap && window.ScrollTrigger) {
