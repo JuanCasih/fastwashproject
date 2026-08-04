@@ -89,134 +89,49 @@
     }).join("");
   }
 
-  function formatNum(n) {
-    n = Math.round(n);
-    return n.toLocaleString("es-AR");
+  function mountMarketOpening() {
+    var target = $("[data-market-opening]");
+    if (!target || target.children.length > 0 || !data.marketOpening) return;
+    var o = data.marketOpening;
+    target.innerHTML =
+      '<span class="market-opening-value">' + escHTML(o.value) +
+      '<span class="market-opening-unit">' + escHTML(o.unit) + '</span></span>' +
+      '<span class="market-opening-text">' + escHTML(o.text) + '</span>' +
+      '<span class="market-opening-source">' + escHTML(o.source) + '</span>';
   }
 
-  function marketVisualSVG(visual) {
-    if (visual === "sparkline") {
-      return '<svg class="market-visual market-visual-sparkline" viewBox="0 0 84 30" fill="none">' +
-        '<polyline class="spark-path" points="2,25 18,20 34,22 50,11 66,13 80,3" pathLength="100" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' +
-        '</svg>';
-    }
-    if (visual === "ring") {
-      return '<svg class="market-visual market-visual-ring" viewBox="0 0 100 100" data-ring>' +
-        '<circle class="ring-track" cx="50" cy="50" r="42" fill="none" stroke-width="9"/>' +
-        '<circle class="ring-fill" cx="50" cy="50" r="42" fill="none" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/>' +
-        '</svg>';
-    }
-    if (visual === "bar") {
-      return '<div class="market-visual market-visual-bar"><div class="market-bar-track"><div class="market-bar-fill" data-bar></div></div></div>';
-    }
-    if (visual === "trophy") {
-      return '<svg class="market-visual market-visual-trophy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' +
-        '<path d="M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4Z"/>' +
-        '<path d="M7 5H4a1 1 0 0 0-1 1c0 2.5 1.8 4.5 4.2 4.9M17 5h3a1 1 0 0 1 1 1c0 2.5-1.8 4.5-4.2 4.9"/>' +
-        '</svg>';
-    }
-    return "";
+  // ---- Sección Mercado: stat de países + texto (sin visualización geográfica) ----
+  // La sección pasó por varios diseños visuales (mapa mundial real, diagrama
+  // de red, constelación de puntos) que fueron descartados. El contenido
+  // ahora es 100% tipográfico: un número grande ("46 PAÍSES"), un párrafo
+  // con países de ejemplo, y un cierre de una línea. `data.marketNetwork`
+  // se conserva como fuente de verdad del conteo (46 = países listados + 1
+  // por Argentina), aunque ya no se itera para dibujar nada.
+  function mountMarketStat() {
+    var wrap = $("[data-market-map]");
+    var network = data.marketNetwork;
+    if (!wrap || wrap.children.length > 0 || !network) return;
+
+    var total = network.reduce(function (sum, c) { return sum + c.countries.length; }, 0) + 1;
+
+    wrap.innerHTML =
+      '<span class="market-opening-value">' + total + '<span class="market-opening-unit">PAÍSES</span></span>' +
+      '<span class="market-opening-text">' + escHTML(data.marketCountriesStatText || "") + '</span>';
   }
 
-  function mountMarket() {
-    var target = $("[data-market-stats]");
-    if (target && target.children.length === 0 && data.marketStats) {
-      target.innerHTML = data.marketStats.map(function (s) {
-        var prefix = s.prefix || "";
-        var suffix = s.suffix || "";
-        var staticBefore = s.showFromStatic
-          ? (prefix + formatNum(s.from) + suffix + " → " + prefix)
-          : prefix;
-        return '<div class="market-stat reveal is-' + escHTML(s.size) + '">' +
-          marketVisualSVG(s.visual) +
-          '<span class="market-stat-value">' +
-          (staticBefore ? '<span class="market-stat-prefix">' + escHTML(staticBefore) + '</span>' : "") +
-          '<span class="market-stat-count" data-count data-from="' + s.from + '" data-to="' + s.to + '">' + escHTML(formatNum(s.from)) + '</span>' +
-          (suffix ? '<span class="market-stat-suffix">' + escHTML(suffix) + '</span>' : "") +
-          '</span>' +
-          '<p class="market-stat-label">' + escHTML(s.label) + '</p>' +
-          '<span class="market-stat-source">' + escHTML(s.source) + '</span>' +
-          '</div>';
-      }).join("");
+  function mountMarketText() {
+    var countries = $("[data-market-countries]");
+    if (countries && !countries.textContent.trim() && data.marketCountriesText) {
+      countries.textContent = data.marketCountriesText;
+    }
+    var diff = $("[data-market-diff]");
+    if (diff && !diff.textContent.trim() && data.marketDiff) {
+      diff.textContent = data.marketDiff;
     }
     var closing = $("[data-market-closing]");
     if (closing && !closing.textContent.trim() && data.marketClosing) {
-      closing.textContent = data.marketClosing;
+      closing.innerHTML = data.marketClosing;
     }
-  }
-
-  /* ---------- Market stats: count-up + ring/bar reveal ---------- */
-
-  function initMarketCountUp() {
-    var cards = $$(".market-stat");
-    if (!cards.length) return;
-
-    var easeOutCubic = function (t) { return 1 - Math.pow(1 - t, 3); };
-
-    var animateCard = function (card) {
-      if (card.dataset.counted) return;
-      card.dataset.counted = "1";
-      var countEl = $("[data-count]", card);
-      var duration = reduced ? 1 : 1200;
-      var start = null;
-
-      if (countEl) {
-        var from = parseFloat(countEl.getAttribute("data-from")) || 0;
-        var to = parseFloat(countEl.getAttribute("data-to")) || 0;
-        var step = function (ts) {
-          if (!start) start = ts;
-          var t = Math.min(1, (ts - start) / duration);
-          var eased = easeOutCubic(t);
-          var val = from + (to - from) * eased;
-          countEl.textContent = formatNum(val);
-          if (t < 1) requestAnimationFrame(step);
-          else countEl.textContent = formatNum(to);
-        };
-        requestAnimationFrame(step);
-      }
-
-      var ring = $("[data-ring] .ring-fill", card);
-      if (ring) {
-        var target = parseFloat(countEl ? countEl.getAttribute("data-to") : 0) || 0;
-        requestAnimationFrame(function () {
-          ring.style.transition = "stroke-dashoffset " + duration + "ms cubic-bezier(0.16,1,0.3,1)";
-          ring.style.strokeDashoffset = String(100 - target);
-        });
-      }
-
-      var bar = $("[data-bar]", card);
-      if (bar) {
-        var barTarget = countEl ? parseFloat(countEl.getAttribute("data-to")) || 0 : 0;
-        requestAnimationFrame(function () {
-          bar.style.transition = "width " + duration + "ms cubic-bezier(0.16,1,0.3,1)";
-          bar.style.width = barTarget + "%";
-        });
-      }
-    };
-
-    if (typeof IntersectionObserver === "undefined") {
-      cards.forEach(animateCard);
-      return;
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCard(entry.target);
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-
-    cards.forEach(function (card) { io.observe(card); });
-
-    setTimeout(function () {
-      cards.forEach(function (card) {
-        if (!card.dataset.counted && card.getBoundingClientRect().top < window.innerHeight) {
-          animateCard(card);
-        }
-      });
-    }, 6000);
   }
 
   function mountContact() {
@@ -436,14 +351,15 @@
     safe(mountSpecs, "mountSpecs");
     safe(mountWashStages, "mountWashStages");
     safe(mountBenefits, "mountBenefits");
-    safe(mountMarket, "mountMarket");
+    safe(mountMarketOpening, "mountMarketOpening");
+    safe(mountMarketStat, "mountMarketStat");
+    safe(mountMarketText, "mountMarketText");
     safe(mountContact, "mountContact");
 
     safe(initNav, "initNav");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
     safe(initWashStages, "initWashStages");
-    safe(initMarketCountUp, "initMarketCountUp");
     safe(initTilt, "initTilt");
 
     if (window.gsap && window.ScrollTrigger) {

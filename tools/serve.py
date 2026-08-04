@@ -4,7 +4,7 @@ import functools
 import http.server
 import sys
 
-PROJECT_ROOT = "/Users/juancruzcasih/Desktop/fastwashproject"
+PROJECT_ROOT = "/Users/juancruzcasih/Desktop/Car Wash/fastwashproject"
 PORT = 8766
 
 if __name__ == "__main__":
