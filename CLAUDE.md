@@ -77,5 +77,4 @@ Excluidos a propósito: negro puro, gris oscuro, rojo, amarillo, turquesa (defin
 
 ## Pendientes
 
-- Completar `contact.whatsapp` y `contact.email` en `lib/manifest.js` (hoy son `null` con placeholder visible)
 - `tools/` es solo para scripts de desarrollo, no se sube al hosting
