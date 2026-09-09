@@ -15,153 +15,419 @@
   function safe(fn, name) {
     try { fn(); } catch (e) { console.warn("[" + name + "]", e); }
   }
+  function digitsOnly(s) { return String(s || "").replace(/[^0-9]/g, ""); }
 
   /* ---------- Mounts (idempotent) ---------- */
 
-  function mountComparison() {
-    var target = $("[data-comparison]");
-    if (!target || target.children.length > 0 || !data.comparison) return;
-    target.innerHTML = data.comparison.map(function (row) {
-      return '<li class="compare-row reveal">' +
-        '<span class="compare-old">' + escHTML(row.old) + '</span>' +
-        '<span class="compare-arrow" aria-hidden="true">' + arrowSVG() + '</span>' +
-        '<span class="compare-new">' + escHTML(row.neu) + '</span>' +
-        '</li>';
-    }).join("");
-  }
+  function mountHero() {
+    var h = data.hero;
+    if (!h) return;
+    var title = $("[data-hero-title]");
+    if (title && !title.textContent.trim()) title.textContent = h.title;
+    var sub = $("[data-hero-sub]");
+    if (sub && !sub.textContent.trim()) sub.textContent = h.sub;
+    var secondary = $("[data-hero-cta-secondary]");
+    if (secondary && !secondary.textContent.trim()) secondary.textContent = h.ctaSecondary;
 
-  function mountCycle() {
-    var target = $("[data-cycle]");
-    if (!target || target.children.length > 0 || !data.cycleSteps) return;
-    target.innerHTML = data.cycleSteps.map(function (s) {
-      return '<article class="cycle-card reveal">' +
-        '<span class="cycle-n">' + escHTML(s.n) + '</span>' +
-        '<h3 class="cycle-title">' + escHTML(s.title) + '</h3>' +
-        '<p class="cycle-desc">' + escHTML(s.desc) + '</p>' +
-        '</article>';
-    }).join("");
-  }
-
-  function mountSpecs() {
-    var target = $("[data-specs]");
-    if (!target || target.children.length > 0 || !data.specs) return;
-    target.innerHTML = data.specs.map(function (s) {
-      return '<div class="spec-row reveal">' +
-        '<span class="spec-label">' + escHTML(s.label) + '</span>' +
-        '<span class="spec-value">' + escHTML(s.value) + '</span>' +
-        '</div>';
-    }).join("");
-  }
-
-  function washStageMuteIcons() {
-    return '<svg class="icon-muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M16 9a3 3 0 0 1 0 6M18.5 6.5a7 7 0 0 1 0 11" stroke-linecap="round"/><path d="M2 2l20 20" stroke-linecap="round"/></svg>' +
-      '<svg class="icon-unmuted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke-linejoin="round"/><path d="M16 9a3 3 0 0 1 0 6M18.5 6.5a7 7 0 0 1 0 11" stroke-linecap="round"/></svg>';
-  }
-
-  function mountWashStages() {
-    var target = $("[data-wash-stages]");
-    if (!target || target.children.length > 0 || !data.washStages) return;
-    target.innerHTML = data.washStages.map(function (s) {
-      return '<section class="wash-stage" data-wash-stage>' +
-        '<video class="wash-stage-media" src="' + escHTML(s.video) + '" poster="' + escHTML(s.poster) + '" ' +
-        'muted loop playsinline preload="metadata" data-wash-video></video>' +
-        '<div class="wash-stage-scrim"></div>' +
-        '<div class="wash-stage-indicator">' +
-        '<span class="wash-stage-indicator-n">' + escHTML(s.n) + '</span>' +
-        '<span class="wash-stage-indicator-name">' + escHTML(s.name) + '</span>' +
-        '</div>' +
-        '<button type="button" class="wash-stage-mute" data-wash-mute aria-label="Activar sonido">' +
-        washStageMuteIcons() +
-        '</button>' +
-        '</section>';
-    }).join("");
-  }
-
-  function mountBenefits() {
-    var target = $("[data-benefits]");
-    if (!target || target.children.length > 0 || !data.benefits) return;
-    target.innerHTML = data.benefits.map(function (b, i) {
-      return '<article class="benefit-card reveal">' +
-        '<span class="benefit-n">' + String(i + 1).padStart(2, "0") + '</span>' +
-        '<h3 class="benefit-title">' + escHTML(b.title) + '</h3>' +
-        '<p class="benefit-desc">' + escHTML(b.desc) + '</p>' +
-        '</article>';
-    }).join("");
-  }
-
-  function mountMarketOpening() {
-    var target = $("[data-market-opening]");
-    if (!target || target.children.length > 0 || !data.marketOpening) return;
-    var o = data.marketOpening;
-    target.innerHTML =
-      '<span class="market-opening-value">' + escHTML(o.value) +
-      '<span class="market-opening-unit">' + escHTML(o.unit) + '</span></span>' +
-      '<span class="market-opening-text">' + escHTML(o.text) + '</span>' +
-      '<span class="market-opening-source">' + escHTML(o.source) + '</span>';
-  }
-
-  // ---- Sección Mercado: stat de países + texto (sin visualización geográfica) ----
-  // La sección pasó por varios diseños visuales (mapa mundial real, diagrama
-  // de red, constelación de puntos) que fueron descartados. El contenido
-  // ahora es 100% tipográfico: un número grande ("46 PAÍSES"), un párrafo
-  // con países de ejemplo, y un cierre de una línea. `data.marketNetwork`
-  // se conserva como fuente de verdad del conteo (46 = países listados + 1
-  // por Argentina), aunque ya no se itera para dibujar nada.
-  function mountMarketStat() {
-    var wrap = $("[data-market-map]");
-    var network = data.marketNetwork;
-    if (!wrap || wrap.children.length > 0 || !network) return;
-
-    var total = network.reduce(function (sum, c) { return sum + c.countries.length; }, 0) + 1;
-
-    wrap.innerHTML =
-      '<span class="market-opening-value">' + total + '<span class="market-opening-unit">PAÍSES</span></span>' +
-      '<span class="market-opening-text">' + escHTML(data.marketCountriesStatText || "") + '</span>';
-  }
-
-  function mountMarketText() {
-    var countries = $("[data-market-countries]");
-    if (countries && !countries.textContent.trim() && data.marketCountriesText) {
-      countries.textContent = data.marketCountriesText;
+    var stats = $("[data-hero-stats]");
+    if (stats && stats.children.length === 0 && h.stats) {
+      stats.innerHTML = h.stats.map(function (s) {
+        return '<div class="hero-stat reveal">' +
+          '<span class="hero-stat-value">' + escHTML(s.value) + '</span>' +
+          '<span class="hero-stat-unit">' + escHTML(s.unit) + '</span>' +
+          '</div>';
+      }).join("");
     }
-    var diff = $("[data-market-diff]");
-    if (diff && !diff.textContent.trim() && data.marketDiff) {
-      diff.textContent = data.marketDiff;
+  }
+
+  function mountMarquee() {
+    var track = $("[data-marquee]");
+    if (!track || track.children.length > 0 || !data.marquee) return;
+    var items = data.marquee.concat(data.marquee).map(function (t) {
+      return "<span>" + escHTML(t) + "</span>";
+    }).join("");
+    track.innerHTML = items;
+  }
+
+  function mountOportunidad() {
+    var o = data.oportunidad;
+    if (!o) return;
+    var kicker = $("[data-oportunidad-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = o.kicker;
+    var title = $("[data-oportunidad-title]");
+    if (title && !title.textContent.trim()) title.textContent = o.title;
+
+    var parrafos = $("[data-oportunidad-parrafos]");
+    if (parrafos && parrafos.children.length === 0 && o.parrafos) {
+      parrafos.innerHTML = o.parrafos.map(function (p, i) {
+        return '<p class="section-lede reveal"' + (i > 0 ? ' style="margin-top:1rem;"' : "") + '>' + escHTML(p) + '</p>';
+      }).join("");
     }
-    var closing = $("[data-market-closing]");
-    if (closing && !closing.textContent.trim() && data.marketClosing) {
-      closing.innerHTML = data.marketClosing;
+
+    var perfilesTitle = $("[data-oportunidad-perfiles-title]");
+    if (perfilesTitle && !perfilesTitle.textContent.trim()) perfilesTitle.textContent = o.perfilesTitle;
+
+    var perfiles = $("[data-oportunidad-perfiles]");
+    if (perfiles && perfiles.children.length === 0 && o.perfiles) {
+      perfiles.innerHTML = o.perfiles.map(function (p) {
+        return '<article class="benefit-card reveal"><h3 class="benefit-title">' + escHTML(p) + '</h3></article>';
+      }).join("");
     }
+  }
+
+  function mountCombo() {
+    var c = data.combo;
+    if (!c) return;
+    var kicker = $("[data-combo-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
+    var title = $("[data-combo-title]");
+    if (title && !title.textContent.trim()) title.textContent = c.title;
+    var intro = $("[data-combo-intro]");
+    if (intro && !intro.textContent.trim()) intro.textContent = c.intro;
+
+    var maquinas = $("[data-combo-maquinas]");
+    if (maquinas && maquinas.children.length === 0 && c.maquinas) {
+      maquinas.innerHTML = c.maquinas.map(function (m) {
+        return '<article class="combo-card reveal">' +
+          '<span class="combo-card-name">' + escHTML(m.nombre) + '</span>' +
+          '<h3 class="combo-card-role">' + escHTML(m.rol) + '</h3>' +
+          '<p class="combo-card-desc">' + escHTML(m.desc) + '</p>' +
+          '</article>';
+      }).join("");
+    }
+
+    var specsTitle = $("[data-combo-specs-title]");
+    if (specsTitle && !specsTitle.textContent.trim()) specsTitle.textContent = c.tt303SpecsTitle;
+
+    var specs = $("[data-combo-specs]");
+    if (specs && specs.children.length === 0 && c.tt303Specs) {
+      specs.innerHTML = c.tt303Specs.map(function (s) {
+        return '<div class="spec-row reveal">' +
+          '<span class="spec-label">' + escHTML(s.label) + '</span>' +
+          '<span class="spec-value">' + escHTML(s.value) + '</span>' +
+          '</div>';
+      }).join("");
+    }
+  }
+
+  function mountComoFunciona() {
+    var cf = data.comoFunciona;
+    if (!cf) return;
+    var kicker = $("[data-como-funciona-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = cf.kicker;
+    var title = $("[data-como-funciona-title]");
+    if (title && !title.textContent.trim()) title.textContent = cf.title;
+
+    var pasos = $("[data-como-funciona-pasos]");
+    if (pasos && pasos.children.length === 0 && cf.pasos) {
+      pasos.innerHTML = cf.pasos.map(function (p) {
+        return '<article class="cycle-card reveal">' +
+          '<span class="cycle-n">' + escHTML(p.n) + '</span>' +
+          '<h3 class="cycle-title">' + escHTML(p.title) + '</h3>' +
+          '<p class="cycle-desc">' + escHTML(p.desc) + '</p>' +
+          '</article>';
+      }).join("");
+    }
+
+    var featuresTitle = $("[data-features-title]");
+    if (featuresTitle && !featuresTitle.textContent.trim()) featuresTitle.textContent = cf.featuresTitle;
+    var featuresLede = $("[data-features-lede]");
+    if (featuresLede && !featuresLede.textContent.trim()) featuresLede.textContent = cf.featuresLede;
+
+    var features = $("[data-features]");
+    if (features && features.children.length === 0 && cf.features) {
+      features.innerHTML = cf.features.map(function (f) {
+        return '<article class="benefit-card reveal">' +
+          '<h3 class="benefit-title">' + escHTML(f.title) + '</h3>' +
+          '<p class="benefit-desc">' + escHTML(f.desc) + '</p>' +
+          '</article>';
+      }).join("");
+    }
+  }
+
+  function mountModos() {
+    var m = data.modos;
+    if (!m) return;
+    var kicker = $("[data-modos-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = m.kicker;
+    var title = $("[data-modos-title]");
+    if (title && !title.textContent.trim()) title.textContent = m.title;
+    var lede = $("[data-modos-lede]");
+    if (lede && !lede.textContent.trim()) lede.textContent = m.lede;
+
+    var table = $("[data-modos-tabla]");
+    var tbody = table ? $("tbody", table) : null;
+    if (tbody && tbody.children.length === 0 && m.tabla) {
+      tbody.innerHTML = m.tabla.map(function (r) {
+        return "<tr><td>" + escHTML(r.modo) + "</td><td>" + escHTML(r.incluye) + "</td><td>" + escHTML(r.tiempo) + "</td></tr>";
+      }).join("");
+    }
+  }
+
+  function mountNumeros() {
+    var n = data.numeros;
+    if (!n) return;
+    var kicker = $("[data-numeros-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = n.kicker;
+    var title = $("[data-numeros-title]");
+    if (title && !title.textContent.trim()) title.textContent = n.title;
+    var consumoTitle = $("[data-consumo-title]");
+    if (consumoTitle && !consumoTitle.textContent.trim()) consumoTitle.textContent = n.consumoTitle;
+
+    var table = $("[data-consumo-tabla]");
+    var tbody = table ? $("tbody", table) : null;
+    if (tbody && tbody.children.length === 0 && n.consumo) {
+      tbody.innerHTML = n.consumo.map(function (r) {
+        return "<tr><td>" + escHTML(r.label) + "</td><td>" + escHTML(r.value) + "</td></tr>";
+      }).join("");
+    }
+
+    var calc = n.calculadora;
+    if (!calc) return;
+    var calcTitle = $("[data-calc-title]");
+    if (calcTitle && !calcTitle.textContent.trim()) calcTitle.textContent = calc.title;
+    var autosLabel = $("[data-calc-autos-label]");
+    if (autosLabel && !autosLabel.textContent.trim()) autosLabel.textContent = calc.autosLabel;
+    var precioLabel = $("[data-calc-precio-label]");
+    if (precioLabel && !precioLabel.textContent.trim()) precioLabel.textContent = calc.precioLabel;
+    var resultLabel = $("[data-calc-result-label]");
+    if (resultLabel && !resultLabel.textContent.trim()) resultLabel.textContent = calc.resultLabel;
+    var disclaimer = $("[data-calc-disclaimer]");
+    if (disclaimer && !disclaimer.textContent.trim()) disclaimer.textContent = calc.disclaimer;
+
+    var range = $("[data-calc-autos-range]");
+    if (range && !range.dataset.mounted) {
+      range.min = calc.autosMin;
+      range.max = calc.autosMax;
+      range.value = calc.autosDefault;
+      range.dataset.mounted = "1";
+    }
+    var precioInput = $("[data-calc-precio-input]");
+    if (precioInput && !precioInput.dataset.mounted) {
+      precioInput.value = calc.precioDefault;
+      precioInput.step = calc.precioStep;
+      precioInput.min = "0";
+      precioInput.dataset.mounted = "1";
+    }
+  }
+
+  function mountControl() {
+    var c = data.control;
+    if (!c) return;
+    var kicker = $("[data-control-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
+    var title = $("[data-control-title]");
+    if (title && !title.textContent.trim()) title.textContent = c.title;
+    var lede = $("[data-control-lede]");
+    if (lede && !lede.textContent.trim()) lede.textContent = c.lede;
+
+    var items = $("[data-control-items]");
+    if (items && items.children.length === 0 && c.items) {
+      items.innerHTML = c.items.map(function (it) {
+        return '<div class="contact-card reveal">' +
+          '<span class="label">' + escHTML(it.title) + '</span>' +
+          '<span class="value">' + escHTML(it.desc) + '</span>' +
+          '</div>';
+      }).join("");
+    }
+  }
+
+  function mountIncluye() {
+    var i = data.incluye;
+    if (!i) return;
+    var kicker = $("[data-incluye-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = i.kicker;
+    var title = $("[data-incluye-title]");
+    if (title && !title.textContent.trim()) title.textContent = i.title;
+
+    var items = $("[data-incluye-items]");
+    if (items && items.children.length === 0 && i.items) {
+      items.innerHTML = i.items.map(function (it) {
+        return '<li class="include-item reveal">' + checkSVG() + '<span>' + escHTML(it) + '</span></li>';
+      }).join("");
+    }
+
+    var panel = $("[data-personalizacion]");
+    var p = i.personalizacion;
+    if (panel && panel.children.length === 0 && p) {
+      panel.innerHTML =
+        '<h3 class="personalizacion-title">' + escHTML(p.title) + '</h3>' +
+        '<p class="personalizacion-intro">' + escHTML(p.intro) + '</p>' +
+        '<ul class="color-swatches">' +
+        (p.colores || []).map(function (c) {
+          return '<li class="color-swatch"><span class="color-dot" data-color="' + escHTML(c) + '"></span>' + escHTML(c) + '</li>';
+        }).join("") +
+        '</ul>' +
+        '<p class="personalizacion-marca">' + escHTML(p.marca) + '</p>';
+    }
+  }
+
+  function mountRespaldo() {
+    var r = data.respaldo;
+    if (!r) return;
+    var kicker = $("[data-respaldo-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = r.kicker;
+    var title = $("[data-respaldo-title]");
+    if (title && !title.textContent.trim()) title.textContent = r.title;
+
+    var comps = $("[data-respaldo-componentes]");
+    if (comps && comps.children.length === 0 && r.componentes) {
+      comps.innerHTML = r.componentes.map(function (c) {
+        return '<div class="spec-row reveal">' +
+          '<span class="spec-label">' + escHTML(c.label) + '</span>' +
+          '<span class="spec-value">' + escHTML(c.value) + '</span>' +
+          '</div>';
+      }).join("");
+    }
+
+    var highlights = $("[data-respaldo-highlights]");
+    if (highlights && highlights.children.length === 0 && r.highlights) {
+      highlights.innerHTML = r.highlights.map(function (h) {
+        return '<div class="brand-card reveal"><h3>' + escHTML(h.title) + '</h3><p>' + escHTML(h.desc) + '</p></div>';
+      }).join("");
+    }
+  }
+
+  function mountFAQ() {
+    var f = data.faq;
+    if (!f) return;
+    var kicker = $("[data-faq-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = f.kicker;
+    var title = $("[data-faq-title]");
+    if (title && !title.textContent.trim()) title.textContent = f.title;
+
+    var list = $("[data-faq-list]");
+    if (list && list.children.length === 0 && f.items) {
+      list.innerHTML = f.items.map(function (item, i) {
+        return '<div class="faq-item reveal" data-faq-item>' +
+          '<button type="button" class="faq-question" data-faq-toggle aria-expanded="false" aria-controls="faq-answer-' + i + '">' +
+          '<span>' + escHTML(item.q) + '</span>' +
+          '<span class="faq-icon" aria-hidden="true"></span>' +
+          '</button>' +
+          '<div class="faq-answer" id="faq-answer-' + i + '" data-faq-answer>' +
+          '<div class="faq-answer-inner">' + item.a + '</div>' +
+          '</div>' +
+          '</div>';
+      }).join("");
+    }
+  }
+
+  function mountContacto() {
+    var c = data.contacto;
+    if (!c) return;
+    var kicker = $("[data-contacto-kicker]");
+    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
+    var title = $("[data-contacto-title]");
+    if (title && !title.textContent.trim()) title.textContent = c.title;
+    var lede = $("[data-contacto-lede]");
+    if (lede && !lede.textContent.trim()) lede.textContent = c.lede;
+    var note = $("[data-contacto-whatsapp-note]");
+    if (note && !note.textContent.trim()) note.textContent = c.whatsappNote;
   }
 
   function mountContact() {
     var c = data.contact || {};
     $$("[data-contact-whatsapp]").forEach(function (el) {
       if (c.whatsapp) {
-        el.setAttribute("href", "https://wa.me/" + c.whatsapp.replace(/[^0-9]/g, ""));
-        el.textContent = c.whatsapp;
+        el.setAttribute("href", "https://wa.me/" + digitsOnly(c.whatsapp));
       } else {
         el.removeAttribute("href");
         el.setAttribute("aria-disabled", "true");
-        el.textContent = c.whatsappDisplay || "WhatsApp (a confirmar)";
       }
     });
-    $$("[data-contact-email]").forEach(function (el) {
-      if (c.email) {
-        el.setAttribute("href", "mailto:" + c.email);
-        el.textContent = c.email;
-      } else {
-        el.removeAttribute("href");
-        el.setAttribute("aria-disabled", "true");
-        el.textContent = c.emailDisplay || "email a confirmar";
-      }
+    var number = $("[data-contact-whatsapp-number]");
+    if (number && !number.textContent.trim()) {
+      number.textContent = c.whatsapp || c.whatsappDisplay || "WhatsApp (a confirmar)";
+    }
+  }
+
+  function checkSVG() {
+    return '<svg class="include-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  /* ---------- Calculator ---------- */
+
+  function formatCurrency(n) {
+    try {
+      return "$" + Math.round(n).toLocaleString("es-AR");
+    } catch (e) {
+      return "$" + Math.round(n);
+    }
+  }
+
+  function initCalculator() {
+    var calc = $("[data-calculator]");
+    if (!calc) return;
+    var range = $("[data-calc-autos-range]", calc);
+    var autosValue = $("[data-calc-autos-value]", calc);
+    var precioInput = $("[data-calc-precio-input]", calc);
+    var resultValue = $("[data-calc-result-value]", calc);
+    if (!range || !precioInput || !resultValue) return;
+
+    var recompute = function () {
+      var autos = parseFloat(range.value) || 0;
+      var precio = parseFloat(precioInput.value) || 0;
+      if (autosValue) autosValue.textContent = String(Math.round(autos));
+      var total = autos * precio * 30;
+      resultValue.textContent = formatCurrency(total);
+    };
+
+    range.addEventListener("input", recompute);
+    precioInput.addEventListener("input", recompute);
+    recompute();
+  }
+
+  /* ---------- FAQ accordion ---------- */
+
+  function initFAQ() {
+    var items = $$("[data-faq-item]");
+    if (!items.length) return;
+    items.forEach(function (item) {
+      var toggle = $("[data-faq-toggle]", item);
+      if (!toggle) return;
+      toggle.addEventListener("click", function () {
+        var isOpen = item.classList.contains("is-open");
+        items.forEach(function (other) {
+          other.classList.remove("is-open");
+          var t = $("[data-faq-toggle]", other);
+          if (t) t.setAttribute("aria-expanded", "false");
+        });
+        if (!isOpen) {
+          item.classList.add("is-open");
+          toggle.setAttribute("aria-expanded", "true");
+        }
+      });
     });
   }
 
-  function arrowSVG() {
-    return '<svg viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrow-icon">' +
-      '<path d="M2 12H44M44 12L33 2M44 12L33 22" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '</svg>';
+  /* ---------- Contact form: builds a prefilled WhatsApp message ---------- */
+  /* Sitio estático sin backend: no hay dónde enviar el formulario, así que
+     al enviarlo armamos un mensaje de WhatsApp con los datos cargados y
+     abrimos wa.me con ese texto, en vez de hacer un POST a un servidor. */
+
+  function initContactForm() {
+    var form = $("[data-contact-form]");
+    if (!form) return;
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var fd = new FormData(form);
+      var nombre = (fd.get("nombre") || "").toString().trim();
+      var telefono = (fd.get("telefono") || "").toString().trim();
+      var negocio = (fd.get("negocio") || "").toString().trim();
+      var ubicacion = (fd.get("ubicacion") || "").toString().trim();
+
+      var lines = [
+        "Hola, quiero información sobre la M-LM535.",
+        "Nombre: " + nombre,
+        "Teléfono: " + telefono,
+        "Tipo de negocio: " + negocio,
+        "Ubicación: " + ubicacion
+      ];
+      var msg = encodeURIComponent(lines.join("\n"));
+      var whatsapp = (data.contact || {}).whatsapp;
+      if (!whatsapp) return;
+      window.open("https://wa.me/" + digitsOnly(whatsapp) + "?text=" + msg, "_blank", "noopener");
+    });
   }
 
   /* ---------- Nav ---------- */
@@ -242,61 +508,6 @@
     }, 6000);
   }
 
-  /* ---------- Wash stages: full-bleed sequential video showcase ---------- */
-
-  function initWashStages() {
-    var stages = $$("[data-wash-stage]");
-    if (!stages.length) return;
-
-    stages.forEach(function (stage) {
-      var video = $("[data-wash-video]", stage);
-      var muteBtn = $("[data-wash-mute]", stage);
-      if (muteBtn && video) {
-        muteBtn.addEventListener("click", function () {
-          video.muted = !video.muted;
-          muteBtn.classList.toggle("is-unmuted", !video.muted);
-          muteBtn.setAttribute("aria-label", video.muted ? "Activar sonido" : "Silenciar");
-        });
-      }
-    });
-
-    var reveal = function (stage) {
-      stage.classList.add("is-visible");
-    };
-
-    if (typeof IntersectionObserver === "undefined") {
-      stages.forEach(function (stage) {
-        reveal(stage);
-        var v = $("[data-wash-video]", stage);
-        if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-      });
-      return;
-    }
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var stage = entry.target;
-        var v = $("[data-wash-video]", stage);
-        if (entry.isIntersecting) {
-          reveal(stage);
-          if (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
-        } else if (v) {
-          v.pause();
-        }
-      });
-    }, { threshold: 0.35 });
-
-    stages.forEach(function (stage) { io.observe(stage); });
-
-    setTimeout(function () {
-      stages.forEach(function (stage) {
-        if (!stage.classList.contains("is-visible") && stage.getBoundingClientRect().top < window.innerHeight) {
-          reveal(stage);
-        }
-      });
-    }, 6000);
-  }
-
   /* ---------- Card tilt (desktop only) ---------- */
 
   function initTilt() {
@@ -316,17 +527,7 @@
     });
   }
 
-  /* ---------- GSAP-enhanced parallax (progressive) ---------- */
-
-  function initHeroParallax() {
-    var media = $("[data-hero-media]");
-    if (!media) return;
-    gsap.to(media, {
-      yPercent: 12,
-      ease: "none",
-      scrollTrigger: { trigger: "[data-hero]", start: "top top", end: "bottom top", scrub: 0.4 }
-    });
-  }
+  /* ---------- GSAP stagger reveals ---------- */
 
   function initStaggerReveals() {
     $$("[data-stagger]").forEach(function (group) {
@@ -346,25 +547,30 @@
   /* ---------- Boot ---------- */
 
   function boot() {
-    safe(mountComparison, "mountComparison");
-    safe(mountCycle, "mountCycle");
-    safe(mountSpecs, "mountSpecs");
-    safe(mountWashStages, "mountWashStages");
-    safe(mountBenefits, "mountBenefits");
-    safe(mountMarketOpening, "mountMarketOpening");
-    safe(mountMarketStat, "mountMarketStat");
-    safe(mountMarketText, "mountMarketText");
+    safe(mountHero, "mountHero");
+    safe(mountMarquee, "mountMarquee");
+    safe(mountOportunidad, "mountOportunidad");
+    safe(mountCombo, "mountCombo");
+    safe(mountComoFunciona, "mountComoFunciona");
+    safe(mountModos, "mountModos");
+    safe(mountNumeros, "mountNumeros");
+    safe(mountControl, "mountControl");
+    safe(mountIncluye, "mountIncluye");
+    safe(mountRespaldo, "mountRespaldo");
+    safe(mountFAQ, "mountFAQ");
+    safe(mountContacto, "mountContacto");
     safe(mountContact, "mountContact");
 
     safe(initNav, "initNav");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
-    safe(initWashStages, "initWashStages");
+    safe(initCalculator, "initCalculator");
+    safe(initFAQ, "initFAQ");
+    safe(initContactForm, "initContactForm");
     safe(initTilt, "initTilt");
 
     if (window.gsap && window.ScrollTrigger) {
       try { gsap.registerPlugin(ScrollTrigger); } catch (e) {}
-      safe(initHeroParallax, "initHeroParallax");
       safe(initStaggerReveals, "initStaggerReveals");
     }
 

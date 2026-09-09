@@ -3,21 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>IA Wash — Lavado de autos sin contacto en Argentina</title>
-<meta name="description" content="IA Wash trae a Argentina el sistema de lavado de autos sin contacto IA600 PRO. Información técnica y de negocio para estaciones de servicio, shoppings, complejos comerciales y emprendedores." />
+<title>IA Wash — M-LM535, lavado automático de alta capacidad</title>
+<meta name="description" content="Puente de lavado automático M-LM535 para estaciones de servicio, concesionarias y lavaderos. Entre 8 y 16 autos por hora, combo con TT-303, control desde el celular." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Poppins:wght@400;500;600;700;800&display=swap">
 
-<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png?v=20260804g">
-<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png?v=20260804g">
-<link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon-180.png?v=20260804g">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png?v=20260909a">
+<link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon-16.png?v=20260909a">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon-180.png?v=20260909a">
 
-<link rel="preload" as="video" href="assets/video/hero.mp4" fetchpriority="high">
-<link rel="preload" as="image" href="assets/img/hero-poster.webp" fetchpriority="high">
-
-<link rel="stylesheet" href="styles.css?v=20260804g">
+<link rel="stylesheet" href="styles.css?v=20260909a">
 </head>
 <body>
 <a class="skip-link" href="#main">Saltar al contenido</a>
@@ -25,19 +22,19 @@
 <header class="nav" data-nav>
   <div class="container nav-inner">
     <a class="nav-logo" href="#top" aria-label="IA Wash — inicio">
-      <img src="assets/img/logo-iawash.webp?v=20260804g" alt="IA Wash" width="165" height="42" />
+      <img src="assets/img/logo-iawash.webp?v=20260909a" alt="IA Wash" width="165" height="42" />
     </a>
 
     <nav class="nav-menu" data-nav-menu aria-label="Navegación principal">
       <a href="#como-funciona">Cómo funciona</a>
-      <a href="#ventajas">Ventajas</a>
-      <a href="#galeria">Galería</a>
-      <a href="#tecnologia">Tecnología</a>
+      <a href="#combo">El combo</a>
+      <a href="#numeros">Números del negocio</a>
+      <a href="#faq">Preguntas frecuentes</a>
       <a href="#contacto">Contacto</a>
-      <a class="btn btn-primary nav-cta-mobile" href="#contacto">Quiero saber más</a>
+      <a class="btn btn-primary nav-cta-mobile" href="#" data-contact-whatsapp>Hablar por WhatsApp</a>
     </nav>
 
-    <a class="btn btn-primary nav-cta" href="#contacto">Quiero saber más</a>
+    <a class="btn btn-primary nav-cta" href="#" data-contact-whatsapp>Hablar por WhatsApp</a>
 
     <button class="nav-toggle" data-nav-toggle aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-menu">
       <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
@@ -48,24 +45,18 @@
 
 <main id="main">
 
-  <!-- HERO -->
+  <!-- HERO / APERTURA -->
   <section class="hero" id="top" data-hero>
-    <div class="hero-media-wrap" data-hero-media>
-      <video src="assets/video/hero.mp4" poster="assets/img/hero-poster.webp" autoplay muted loop playsinline preload="auto"></video>
-    </div>
-    <div class="hero-scrim"></div>
-
     <div class="hero-inner container">
-      <h1 class="hero-title">El futuro del lavado<br>de autos <em>llegó a Argentina</em></h1>
-      <p class="hero-sub">Un sistema de lavado 100% sin contacto: sin cepillos, sin trapos, sin turno. Información para estaciones de servicio, shoppings, complejos comerciales y cualquier punto estratégico que quiera sumar esta tecnología a su negocio.</p>
-      <p class="hero-tagline">Pagás. Lavás. Te vas.</p>
+      <h1 class="hero-title" data-hero-title></h1>
+      <p class="hero-sub" data-hero-sub></p>
+
+      <div class="hero-stats" data-stagger data-hero-stats></div>
 
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#contacto">Quiero saber más</a>
-        <a class="btn btn-ghost btn-ghost-light" href="#como-funciona">Ver cómo funciona</a>
+        <a class="btn btn-primary" href="#" data-contact-whatsapp>Hablar por WhatsApp</a>
+        <a class="btn btn-ghost-light" href="#como-funciona" data-hero-cta-secondary></a>
       </div>
-
-      <p class="hero-credibility">Distribuidores oficiales de <span class="hl">nuestro fabricante</span> — líder en China con <span class="hl">más de 6.000 casos exitosos</span> en <span class="hl">70+ países</span>.</p>
     </div>
 
     <div class="scroll-hint">
@@ -76,147 +67,189 @@
 
   <!-- MARQUEE -->
   <div class="marquee" aria-hidden="true">
-    <div class="marquee-track">
-      <span>SIN CONTACTO</span><span>SIN TURNO</span><span>6 A 9 MINUTOS</span><span>CUIDA TU PINTURA</span>
-      <span>SIN CONTACTO</span><span>SIN TURNO</span><span>6 A 9 MINUTOS</span><span>CUIDA TU PINTURA</span>
-    </div>
+    <div class="marquee-track" data-marquee></div>
   </div>
 
-  <!-- PROBLEMA / COMPARACION -->
-  <section class="section" id="ventajas">
+  <!-- LA OPORTUNIDAD -->
+  <section class="section" id="oportunidad">
     <div class="container">
-      <p class="kicker">El problema de siempre</p>
-      <h2 class="section-title reveal">Lavadero de toda la vida<br>vs. IA Wash</h2>
-      <p class="section-lede reveal">El lavado tradicional te hace perder tiempo y expone tu auto a cepillos y trapos. Este sistema resuelve las dos cosas a la vez.</p>
+      <p class="kicker" data-oportunidad-kicker></p>
+      <h2 class="section-title reveal" data-oportunidad-title></h2>
+      <div class="section-lede-group" data-oportunidad-parrafos></div>
 
-      <ul class="compare-list" data-comparison></ul>
+      <h3 class="subsection-title reveal" data-oportunidad-perfiles-title></h3>
+      <div class="benefit-grid" data-stagger data-oportunidad-perfiles></div>
+    </div>
+  </section>
+
+  <!-- EL COMBO -->
+  <section class="section section-alt" id="combo">
+    <div class="container">
+      <p class="kicker" data-combo-kicker></p>
+      <h2 class="section-title reveal" data-combo-title></h2>
+      <p class="section-lede reveal" data-combo-intro></p>
+
+      <div class="combo-grid" data-stagger data-combo-maquinas></div>
+
+      <h3 class="subsection-title reveal" data-combo-specs-title></h3>
+      <div class="specs-panel reveal">
+        <div class="specs-grid" data-stagger data-combo-specs></div>
+      </div>
     </div>
   </section>
 
   <!-- COMO FUNCIONA -->
-  <section class="section section-alt" id="como-funciona">
+  <section class="section" id="como-funciona">
     <div class="container">
-      <p class="kicker">El ciclo de lavado</p>
-      <h2 class="section-title reveal">Seis pasos, sin que<br>nadie toque el auto</h2>
-      <p class="section-lede reveal">Todo el ciclo dura entre 6 y 9 minutos, según el modo elegido. Hay 4 programas configurables.</p>
+      <p class="kicker" data-como-funciona-kicker></p>
+      <h2 class="section-title reveal" data-como-funciona-title></h2>
 
-      <div class="cycle-grid" data-stagger data-cycle></div>
+      <div class="cycle-grid" data-stagger data-como-funciona-pasos></div>
 
-      <div class="cta-band reveal" style="margin-top:3rem;">
-        <h3>Estaciones de servicio, shoppings, complejos comerciales: sumá esta tecnología a tu negocio.</h3>
-        <a class="btn btn-ghost" href="#contacto">Hablemos</a>
+      <h3 class="subsection-title reveal" data-features-title></h3>
+      <p class="section-lede reveal" data-features-lede></p>
+      <div class="benefit-grid" data-stagger data-features></div>
+    </div>
+  </section>
+
+  <!-- MODOS DE LAVADO -->
+  <section class="section section-alt" id="modos">
+    <div class="container">
+      <p class="kicker" data-modos-kicker></p>
+      <h2 class="section-title reveal" data-modos-title></h2>
+      <p class="section-lede reveal" data-modos-lede></p>
+
+      <div class="table-wrap reveal">
+        <table class="data-table" data-modos-tabla>
+          <thead>
+            <tr><th>Modo</th><th>Qué incluye</th><th>Tiempo</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
       </div>
     </div>
   </section>
 
-  <!-- GALERIA / ASI SE VE EN ACCION -->
-  <section class="section" id="galeria">
+  <!-- LOS NUMEROS DEL NEGOCIO -->
+  <section class="section" id="numeros">
     <div class="container">
-      <p class="kicker">Así se ve en acción</p>
-      <h2 class="section-title reveal">Lavado sin contacto,<br>en movimiento</h2>
-      <p class="section-lede reveal">El ciclo real del IA600 PRO, etapa por etapa. Scrolleá para recorrerlo.</p>
+      <p class="kicker" data-numeros-kicker></p>
+      <h2 class="section-title reveal" data-numeros-title></h2>
 
-      <div class="wash-stages" data-wash-stages></div>
+      <h3 class="subsection-title reveal" data-consumo-title></h3>
+      <div class="table-wrap reveal">
+        <table class="data-table" data-consumo-tabla>
+          <thead>
+            <tr><th>Insumo</th><th>Consumo por auto</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <div class="calculator reveal" data-calculator>
+        <h3 class="calculator-title" data-calc-title></h3>
+        <div class="calculator-controls">
+          <label class="calculator-field">
+            <span class="calculator-label" data-calc-autos-label></span>
+            <input type="range" class="calculator-range" data-calc-autos-range>
+            <output class="calculator-value" data-calc-autos-value></output>
+          </label>
+          <label class="calculator-field">
+            <span class="calculator-label" data-calc-precio-label></span>
+            <input type="number" class="calculator-input" data-calc-precio-input inputmode="numeric">
+          </label>
+        </div>
+        <div class="calculator-result">
+          <span class="calculator-result-label" data-calc-result-label></span>
+          <span class="calculator-result-value" data-calc-result-value>$0</span>
+        </div>
+        <p class="calculator-disclaimer" data-calc-disclaimer></p>
+      </div>
     </div>
   </section>
 
-  <!-- BENEFICIOS DE NEGOCIO -->
-  <section class="section section-alt" id="beneficios">
+  <!-- CONTROL DESDE EL CELULAR -->
+  <section class="section section-navy" id="control">
     <div class="container">
-      <p class="kicker">Beneficios de negocio</p>
-      <h2 class="section-title reveal">Un negocio que<br>trabaja solo.</h2>
+      <p class="kicker" data-control-kicker></p>
+      <h2 class="section-title reveal" data-control-title></h2>
+      <p class="section-lede reveal" data-control-lede></p>
 
-      <div class="benefit-grid" data-stagger data-benefits></div>
+      <div class="contact-grid" data-stagger data-control-items></div>
     </div>
   </section>
 
-  <!-- TECNOLOGIA / SPECS -->
-  <section class="section" id="tecnologia">
+  <!-- QUE INCLUYE -->
+  <section class="section" id="incluye">
     <div class="container">
-      <p class="kicker">Respaldo técnico</p>
-      <h2 class="section-title reveal">IA600 PRO,<br>en números reales</h2>
-      <p class="section-lede reveal">Sensores ultrasónicos alemanes, bomba de presión con sello alemán TBT Wash y sistema de anticolisión inteligente. Estos son los datos de la ficha técnica oficial.</p>
+      <p class="kicker" data-incluye-kicker></p>
+      <h2 class="section-title reveal" data-incluye-title></h2>
+
+      <ul class="include-list" data-stagger data-incluye-items></ul>
+
+      <div class="personalizacion-panel reveal" data-personalizacion></div>
+    </div>
+  </section>
+
+  <!-- RESPALDO TECNICO -->
+  <section class="section section-alt" id="respaldo">
+    <div class="container">
+      <p class="kicker" data-respaldo-kicker></p>
+      <h2 class="section-title reveal" data-respaldo-title></h2>
 
       <div class="specs-panel reveal">
-        <div class="specs-grid" data-stagger data-specs></div>
+        <div class="specs-grid" data-stagger data-respaldo-componentes></div>
       </div>
 
-      <div class="brand-block" data-stagger>
-        <div class="brand-card reveal">
-          <h3>Separación agua / espuma</h3>
-          <p>Circuitos independientes para agua y espuma: mejor rendimiento de presión y más de 1/3 de ahorro de químico frente a un sistema de un solo circuito.</p>
-        </div>
-        <div class="brand-card reveal">
-          <h3>Anticolisión inteligente</h3>
-          <p>El brazo detecta la presencia de un obstáculo por presión y detiene la máquina automáticamente, con autodiagnóstico de fallas en cada arranque.</p>
-        </div>
-        <div class="brand-card reveal">
-          <h3>Separación agua / electricidad</h3>
-          <p>Los componentes eléctricos viven en una sala de control separada del box de lavado, lejos del agua, para mayor seguridad y menor riesgo de fallas.</p>
-        </div>
-      </div>
+      <div class="brand-block" data-stagger data-respaldo-highlights></div>
     </div>
   </section>
 
-  <!-- MERCADO -->
-  <section class="section section-alt" id="mercado">
+  <!-- FAQ -->
+  <section class="section" id="faq">
     <div class="container">
-      <p class="kicker">Mercado</p>
-      <h2 class="section-title reveal">La tecnología que ya está<br>funcionando en el mundo.</h2>
-      <p class="section-lede reveal">No es una apuesta a futuro — es una tecnología probada, con un mercado que crece más rápido que el resto de la industria.</p>
+      <p class="kicker" data-faq-kicker></p>
+      <h2 class="section-title reveal" data-faq-title></h2>
 
-      <div class="market-stats-grid" data-stagger>
-        <div class="market-stat-card reveal">
-          <div class="market-opening" data-market-opening></div>
-        </div>
-        <div class="market-stat-card reveal">
-          <div class="market-opening" data-market-map></div>
-          <p class="market-countries-text" data-market-countries></p>
-        </div>
-      </div>
-
-      <p class="market-diff reveal" data-market-diff></p>
-
-      <div class="cta-band reveal" style="margin-top:3rem;">
-        <h3 data-market-closing></h3>
-      </div>
-    </div>
-  </section>
-
-  <!-- OPORTUNIDAD / FAST WASH -->
-  <section class="section" id="oportunidad">
-    <div class="container">
-      <p class="kicker">Quiénes somos</p>
-      <h2 class="section-title reveal">IA Wash trae esta<br>tecnología a Argentina</h2>
-      <p class="section-lede reveal">Importamos, instalamos y ponemos en marcha el sistema IA600 PRO para que estaciones de servicio, shoppings, complejos comerciales y emprendedores puedan evaluar sumarlo a su propio negocio. Esta web es informativa: no vendemos el lavado en sí, mostramos la oportunidad.</p>
-      <p class="section-lede reveal" style="margin-top:1rem;">IA Wash es distribuidor oficial en Argentina de nuestro fabricante, una fábrica china fundada en 2013, líder en fabricación de máquinas de lavado automático, con certificaciones ISO9001, CE europeo y presencia en más de 70 países alrededor del mundo.</p>
-
-      <div class="cta-band reveal" style="margin-top:3rem;">
-        <h3>¿Querés conocer la oportunidad de negocio en detalle?</h3>
-        <a class="btn btn-primary" href="#contacto">Quiero saber más</a>
-      </div>
+      <div class="faq-list" data-faq-list></div>
     </div>
   </section>
 
   <!-- CONTACTO -->
   <section class="section section-navy" id="contacto">
     <div class="container">
-      <p class="kicker">Contacto</p>
-      <h2 class="section-title reveal">¿Hablamos de tu<br>próximo IA Wash?</h2>
-      <p class="section-lede reveal">Dejanos tu consulta y te contamos todo sobre la máquina, la instalación y la oportunidad de negocio.</p>
+      <p class="kicker" data-contacto-kicker></p>
+      <h2 class="section-title reveal" data-contacto-title></h2>
+      <p class="section-lede reveal" data-contacto-lede></p>
 
-      <div class="contact-grid" data-stagger>
-        <div class="contact-card reveal">
-          <span class="label">WhatsApp</span>
-          <a href="#" data-contact-whatsapp>WhatsApp (a confirmar)</a>
+      <form class="contact-form reveal" data-contact-form>
+        <div class="form-row">
+          <label class="form-field">
+            <span>Nombre</span>
+            <input type="text" name="nombre" required autocomplete="name">
+          </label>
+          <label class="form-field">
+            <span>Teléfono</span>
+            <input type="tel" name="telefono" required autocomplete="tel">
+          </label>
         </div>
-        <div class="contact-card reveal">
-          <span class="label">Email</span>
-          <a href="#" data-contact-email>email a confirmar</a>
+        <div class="form-row">
+          <label class="form-field">
+            <span>Tipo de negocio</span>
+            <input type="text" name="negocio" required>
+          </label>
+          <label class="form-field">
+            <span>Ubicación</span>
+            <input type="text" name="ubicacion" required>
+          </label>
         </div>
-      </div>
+        <button type="submit" class="btn btn-primary">Enviar consulta</button>
+      </form>
 
-      <p class="contact-tagline reveal">Pagás. Lavás. Te vas.</p>
+      <a class="contact-whatsapp-direct reveal" href="#" data-contact-whatsapp>
+        <span data-contacto-whatsapp-note></span>
+        <strong data-contact-whatsapp-number></strong>
+      </a>
     </div>
   </section>
 
@@ -224,20 +257,21 @@
 
 <footer class="footer">
   <div class="container footer-inner">
-    <img class="footer-logo" src="assets/img/logo-iawash.webp?v=20260804g" alt="IA Wash" />
+    <img class="footer-logo" src="assets/img/logo-iawash.webp?v=20260909a" alt="IA Wash" />
     <nav class="footer-links" aria-label="Enlaces del pie de página">
       <a href="#como-funciona">Cómo funciona</a>
-      <a href="#galeria">Galería</a>
-      <a href="#tecnologia">Tecnología</a>
+      <a href="#combo">El combo</a>
+      <a href="#numeros">Números del negocio</a>
+      <a href="#faq">Preguntas frecuentes</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <span>&copy; 2026 IA Wash — Argentina</span>
   </div>
 </footer>
 
-<script defer src="lib/gsap.min.js?v=20260804g"></script>
-<script defer src="lib/ScrollTrigger.min.js?v=20260804g"></script>
-<script defer src="lib/manifest.js?v=20260804g"></script>
-<script defer src="main.js?v=20260804g"></script>
+<script defer src="lib/gsap.min.js?v=20260909a"></script>
+<script defer src="lib/ScrollTrigger.min.js?v=20260909a"></script>
+<script defer src="lib/manifest.js?v=20260909a"></script>
+<script defer src="main.js?v=20260909a"></script>
 </body>
 </html>
