@@ -47,7 +47,9 @@
     var track = $("[data-marquee]");
     if (!track || track.children.length > 0 || !data.marquee) return;
     var items = data.marquee.concat(data.marquee).map(function (t) {
-      return "<span>" + escHTML(t) + "</span>";
+      return "<span><span class=\"marquee-phrase\">" + escHTML(t.phrase) + "</span>" +
+        "<span class=\"marquee-sep\" aria-hidden=\"true\">•</span>" +
+        "<span class=\"marquee-stat\">" + escHTML(t.stat) + "</span></span>";
     }).join("");
     track.innerHTML = items;
   }
@@ -73,7 +75,17 @@
     var perfiles = $("[data-oportunidad-perfiles]");
     if (perfiles && perfiles.children.length === 0 && o.perfiles) {
       perfiles.innerHTML = o.perfiles.map(function (p) {
-        return '<article class="benefit-card reveal"><h3 class="benefit-title">' + escHTML(p) + '</h3></article>';
+        return '<article class="profile-card reveal">' +
+          '<picture>' +
+          '<source srcset="assets/img/' + escHTML(p.image) + '.webp" type="image/webp">' +
+          '<img class="profile-card-img" src="assets/img/' + escHTML(p.image) + '.png" alt="' + escHTML(p.alt) + '" loading="lazy" width="900" height="600">' +
+          '</picture>' +
+          '<div class="profile-card-body">' +
+          '<h3 class="profile-card-title">' + escHTML(p.title) + '</h3>' +
+          '<p class="profile-card-hook">' + escHTML(p.hook) + '</p>' +
+          '<p class="profile-card-desc">' + escHTML(p.desc) + '</p>' +
+          '</div>' +
+          '</article>';
       }).join("");
     }
   }

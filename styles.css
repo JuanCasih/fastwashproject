@@ -387,14 +387,16 @@ html.nav-open .nav-toggle .icon-close { display: block; }
   animation: marqueeScroll 26s linear infinite;
   will-change: transform;
 }
-.marquee-track span {
+.marquee-track > span {
   font-family: var(--display);
   text-transform: uppercase;
   font-size: clamp(1rem, 1.6vw, 1.25rem);
   letter-spacing: .04em;
-  display: inline-flex; align-items: center; gap: 2.5rem;
+  display: inline-flex; align-items: center; gap: .8rem;
 }
-.marquee-track span::after { content: "•"; color: var(--accent); }
+.marquee-track > span::after { content: "•"; color: var(--accent); }
+.marquee-sep { color: var(--accent); }
+.marquee-stat { opacity: .68; }
 @keyframes marqueeScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) {
   .marquee-track { animation-duration: 60s; }
@@ -467,7 +469,7 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 }
 
 /* =============================================================
-   10. Benefit cards (reused: perfiles / funciones inteligentes)
+   10. Benefit cards (reused: funciones inteligentes / control / etc.)
    ============================================================= */
 .benefit-grid {
   display: grid;
@@ -497,6 +499,58 @@ html.nav-open .nav-toggle .icon-close { display: block; }
   margin-bottom: .5rem;
 }
 .benefit-desc { color: var(--ink-mute); font-size: .95rem; }
+
+/* =============================================================
+   10.5 Profile cards (para qué tipo de negocio sirve)
+   ============================================================= */
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.profile-card-img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+.profile-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 1.5rem 1.4rem;
+}
+.profile-card-title {
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-size: 1.05rem;
+  letter-spacing: .01em;
+  color: var(--accent-2);
+  margin-bottom: .7rem;
+}
+.profile-card-hook {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: .5rem;
+}
+.profile-card-desc { color: var(--ink-mute); font-size: .92rem; }
+
+@media (min-width: 768px) {
+  .profile-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+  .profile-grid { grid-template-columns: repeat(4, 1fr); }
+}
 
 /* =============================================================
    11. Combo (M-LM535 + TT-303)
