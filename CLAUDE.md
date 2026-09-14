@@ -1,12 +1,16 @@
 # IA Wash — sitio web (M-LM535)
 
-Landing de una sola página para IA Wash, orientada a la venta B2B de la **M-LM535** (puente de lavado automático con cepillos, roll-over, del fabricante Mattias) y su combo con la **TT-303** (aspiradora + inflador + aromatizante de autoservicio). Sitio estático (HTML/CSS/JS vanilla, sin build step), pensado para subir por FTP a Hostinger.
+Landing de una sola página para IA Wash, orientada a la venta B2B de la **M-LM535** (puente de lavado automático con cepillos, roll-over, del fabricante Mattias). Sitio estático (HTML/CSS/JS vanilla, sin build step), pensado para subir por FTP a Hostinger.
+
+**El sitio está en construcción por etapas**: hoy solo llega hasta la sección "El equipo" y una sección de cierre de soporte/mantenimiento — no tiene FAQ, formulario de contacto, sección de modos de lavado, calculadora de facturación ni la vieja sección "El combo" (M-LM535 + TT-303). Todo eso existió en versiones anteriores del sitio y se sacó a propósito para reordenar el contenido; es esperable que se vuelva a agregar en rondas futuras — no es un olvido.
 
 ## Historia del proyecto
 
 Este sitio reemplazó por completo a una versión anterior construida para una máquina de lavado **sin contacto** (touchless) de otro fabricante, cuyo proyecto no siguió adelante. El cambio de máquina no fue cosmético: el argumento de venta pasó de "no toca el auto" a **velocidad y capacidad de lavado**. Por eso el contenido se reescribió desde cero (no se adaptó) y se eliminaron todos los videos/fotos de la máquina anterior (mostraban un sistema sin cepillos, lo cual habría sido engañoso combinado con la nueva máquina, que sí los usa).
 
 **No usar en ningún lado**: "sin contacto", "touchless", "no toca el auto", "sin cepillos", ni datos técnicos de la máquina anterior. Las funciones de precisión de la M-LM535 (seguimiento de contorno, esquive de espejos, monitoreo de correa) se presentan como inteligencia del equipo, nunca como defensa ante el riesgo de rayado por cepillos.
+
+**En la sección "El equipo" específicamente** (`#combo` en el HTML — el id quedó de una versión anterior, el contenido ya no es sobre un combo de dos máquinas): no mencionar "M-LM535", "TT-303", "roll-over" ni ningún código de modelo. Se habla siempre de "el equipo" o "la máquina". El resto del sitio (hero, `<title>`, meta description, etc.) sí puede nombrar el modelo.
 
 ## Público objetivo y tono
 
@@ -26,10 +30,10 @@ Este sitio reemplazó por completo a una versión anterior construida para una m
 
 - `index.html` — toda la estructura de la página
 - `styles.css` — un solo archivo, organizado por secciones numeradas
-- `main.js` — IIFE, monta contenido dinámico desde `lib/manifest.js`, maneja nav/reveals/tilt, y la lógica de la calculadora, el acordeón de FAQ y el formulario de contacto
-- `lib/manifest.js` — datos de contenido (`window.__BRAND__`): hero, oportunidad, combo, cómo funciona, modos, números del negocio, control, qué incluye, respaldo técnico, FAQ, contacto
-- `lib/gsap.min.js`, `lib/ScrollTrigger.min.js` — animaciones de scroll (stagger reveals únicamente; no hay parallax de hero porque el hero no tiene video/imagen de fondo)
-- `assets/img/` — logo y favicons únicamente. No hay fotos/videos reales de la M-LM535 ni de la TT-303 todavía — si se consiguen, agregarlas a `assets/img/` (o `assets/video/`) y sumarlas donde sume (hero, cómo funciona, combo).
+- `main.js` — IIFE, monta contenido dinámico desde `lib/manifest.js` y maneja nav/reveals/tilt. No tiene lógica de calculadora, FAQ ni formulario (esas secciones no existen todavía en esta etapa del sitio).
+- `lib/manifest.js` — datos de contenido (`window.__BRAND__`): `contact`, `hero`, `marquee`, `oportunidad`, `equipo`, `comoFunciona`, `soporte`
+- `lib/gsap.min.js`, `lib/ScrollTrigger.min.js` — animaciones de scroll (stagger reveals únicamente; no hay parallax de hero porque el hero no tiene video de fondo, solo la foto del equipo)
+- `assets/img/` — logo, favicons, foto del equipo (`machine-mlm535`), diagrama de instalación (`diagrama-instalacion`) y las 4 fotos de perfiles de negocio (`estacion-de-servicio`, `concesionaria`, `lavadero`, `parking`). Todas en WebP con fallback PNG vía `<picture>`.
 - `.htaccess` — cache headers para Hostinger
 
 ## Paleta y tipografía
@@ -51,20 +55,16 @@ Sin cambios respecto al proyecto anterior:
 
 ## Estructura de secciones (en orden)
 
-1. **Nav** — logo + menú (Cómo funciona / El combo / Números del negocio / Preguntas frecuentes / Contacto) + CTA "Hablar por WhatsApp" (link directo a `wa.me`, no a `#contacto`)
-2. **Hero** (`#top`) — sin video de fondo (deliberado: no hay footage real de la M-LM535 y reusar el de la máquina anterior sería engañoso). Fondo navy sólido con un glow decorativo. Título + bajada + **3 datos destacados** (`.hero-stats`: 8–16 autos/hora, 2,5–6 min/auto, 43 m²) + botón de WhatsApp visible desde el primer scroll. Datos en `manifest.js` → `hero`.
-3. **Marquee** — cinta de texto en loop con frases de posicionamiento nuevo (autos/hora, roll-over, combo, gestión desde el celular). Datos en `manifest.js` → `marquee`.
-4. **La oportunidad** (`#oportunidad`) — párrafos sobre el cuello de botella del lavado tradicional + grilla de perfiles de negocio a los que les sirve la máquina (`.benefit-grid`, reutilizado). Datos en `manifest.js` → `oportunidad`.
-5. **El combo** (`#combo`) — M-LM535 + TT-303 presentadas como sistema de dos ingresos (`.combo-grid`/`.combo-card`), más specs técnicas del TT-303 en un panel oscuro (`.specs-panel`/`.spec-row`, reutilizado). Datos en `manifest.js` → `combo`.
-6. **Cómo funciona** (`#como-funciona`) — 4 pasos del ciclo (`.cycle-grid`, reutilizado) + 10 funciones inteligentes del equipo (`.benefit-grid`, reutilizado) presentadas como precisión, no como defensa ante rayones. Datos en `manifest.js` → `comoFunciona`.
-7. **Modos de lavado** (`#modos`) — tabla de 4 modos configurables (`.data-table` dentro de `.table-wrap`, con scroll horizontal en mobile). Datos en `manifest.js` → `modos`.
-8. **Los números del negocio** (`#numeros`) — sección más importante del sitio: tabla de consumo por lavado (agua, químico, cera, energía) + **calculadora interactiva** (`.calculator`, slider de autos/día + input de precio → facturación mensual estimada, calculada en vivo por `main.js` → `initCalculator`). Deja explícito que es facturación bruta, sin costos fijos. Datos en `manifest.js` → `numeros`.
-9. **Control desde el celular** (`#control`, fondo navy) — 4 capacidades de la plataforma de gestión (`.contact-grid`/`.contact-card`, reutilizado). Datos en `manifest.js` → `control`.
-10. **Qué incluye** (`#incluye`) — checklist de lo que trae el paquete (`.include-list`) + panel de personalización (colores disponibles + branding del comprador). Datos en `manifest.js` → `incluye`.
-11. **Respaldo técnico** (`#respaldo`) — componentes de marca (SITI, Schneider Electric, Omron, bomba alemana, estructura galvanizada, circuito 48V) en `.specs-panel`/`.spec-row`, más 3 cards de tranquilidad (`.brand-block`/`.brand-card`: vida útil de cepillos, técnico local, químicos nacionales). Datos en `manifest.js` → `respaldo`.
-12. **Preguntas frecuentes** (`#faq`) — acordeón (`.faq-list`/`.faq-item`, un ítem abierto a la vez, animado con CSS grid `0fr`/`1fr`, sin medir alturas por JS). `main.js` → `initFAQ` maneja el toggle. Requisitos de instalación van acá, sin protagonismo. Incluye placeholder honesto para garantía/plazos ("a confirmar con el fabricante"). Datos en `manifest.js` → `faq`.
-13. **Contacto** (`#contacto`, fondo navy) — formulario de 4 campos (nombre, teléfono, tipo de negocio, ubicación) + link directo de WhatsApp. El sitio es estático y no tiene backend: al enviar el formulario, `main.js` → `initContactForm` arma un mensaje de WhatsApp con los datos cargados y abre `wa.me` con ese texto (no hace un POST a ningún servidor). Datos en `manifest.js` → `contacto`.
-14. **Footer** — logo, links, copyright.
+1. **Nav** — logo + menú (Cómo funciona / El equipo) + CTA "Hablar por WhatsApp" (link directo a `wa.me`, siempre visible, con label corto "WhatsApp" por debajo de los 600px). El menú solo lista anclas que existen en la página — si se agrega una sección nueva, sumarla acá; si se saca una, sacar su link.
+2. **Hero** (`#top`) — layout de dos columnas en desktop (una en mobile/tablet, <1024px): a la izquierda título + bajada + botón "Ver cómo funciona" (`.hero-content`), a la derecha la foto del equipo sobre un glow radial sutil, sin panel blanco (`.hero-media`). Debajo de ambas columnas, a todo el ancho, la franja de **3 datos destacados** (`.hero-stats-band`: "8 a 16 / autos por hora", "Hasta 128 / autos por día", "En solo 43 / m² de espacio" — el prefijo "Hasta"/"En solo" es parte del número, en tamaño menor). Datos en `manifest.js` → `hero`.
+3. **Marquee** — cinta de texto en loop con 3 pares frase + dato de negocio (nunca nombra el modelo ni "roll-over"), separados por "•" tanto dentro del par como entre pares; el dato va en opacidad reducida para diferenciarse de la frase. Datos en `manifest.js` → `marquee`.
+4. **Para qué tipo de negocio sirve** (`#oportunidad`) — sin intro (se sacó el kicker/título/párrafos de "La oportunidad"): arranca directo con un título grande centrado en celeste (`.profile-section-title`, mismo tratamiento en todas las secciones que lo usan) seguido de una grilla de 4 tarjetas con imagen (`.profile-grid`/`.profile-card`: foto 3:2 + título de rubro + frase destacada + párrafo). 4 columnas desktop, 2 entre 768–1024px, 1 en mobile, todas la misma altura. Datos en `manifest.js` → `oportunidad`.
+5. **El equipo** (`#combo` — el id es heredado de una versión anterior, no renombrado) — otro título grande centrado en celeste, después diagrama de instalación + lista de 5 datos de espacio/conexión en dos columnas (`.equipo-grid`/`.equipo-diagram`/`.equipo-datos`, diagrama primero al apilarse bajo 1024px), y por último las 4 etapas del ciclo como tarjetas (`.cycle-grid`/`.cycle-card`, mismo estilo que "Cómo funciona") con una línea de cierre centrada debajo. Ver la advertencia de naming de modelo más arriba. Datos en `manifest.js` → `equipo`.
+6. **Cómo funciona** (`#como-funciona`) — únicamente los 4 pasos del ciclo (`.cycle-grid`/`.cycle-card`, 4/2/1 columnas). Ya no incluye la sub-sección "Precisión del equipo" (10 funciones inteligentes) — se sacó por completo. Datos en `manifest.js` → `comoFunciona`.
+7. **Soporte** (`#soporte`) — sección de cierre actual de la página: título grande centrado en celeste + 4 tarjetas (`.brand-block`/`.brand-card`, 4/2/1 columnas, misma altura) sobre químicos locales, vida útil de cepillos, repuestos incluidos y mantenimiento local. Datos en `manifest.js` → `soporte`.
+8. **Footer** — logo, links (mismos que el nav), copyright.
+
+No hay sección de modos de lavado, números del negocio/calculadora, control desde el celular, qué incluye/personalización, respaldo técnico (tabla de componentes), FAQ ni formulario de contacto — se sacaron todas en la última ronda y se espera que vuelvan en el futuro, reordenadas.
 
 ## Datos de contacto
 
@@ -72,7 +72,7 @@ Sin cambios respecto al proyecto anterior:
 
 ## Pendientes
 
-- No hay fotos ni videos reales de la M-LM535 ni de la TT-303 — el sitio es 100% tipográfico por ahora. Si se consiguen, considerar sumarlos al hero y a "Cómo funciona".
-- Confirmar con el fabricante: garantía, plazos de entrega e instalación (hoy son un placeholder en el FAQ que deriva a WhatsApp).
-- Confirmar la integración de pago local del TT-303 antes de publicar cualquier mención al respecto.
+- Reagregar, reordenadas, las secciones que se sacaron: modos de lavado, números del negocio (con la calculadora de facturación), control desde el celular, qué incluye/personalización, respaldo técnico (componentes + garantías), FAQ y contacto (formulario + requisitos de instalación).
+- Cuando vuelva el contacto, confirmar con el fabricante: garantía, plazos de entrega e instalación.
+- Si en algún momento se retoma la idea del combo con un segundo equipo de autoservicio, confirmar antes su integración de pago local.
 - `tools/` es solo para scripts de desarrollo, no se sube al hosting.

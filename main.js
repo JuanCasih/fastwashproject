@@ -102,14 +102,12 @@
 
     var etapas = $("[data-equipo-etapas]");
     if (etapas && etapas.children.length === 0 && e.etapas) {
-      etapas.innerHTML = e.etapas.map(function (s, i) {
-        var step = '<div class="etapa-step reveal">' +
-          '<span class="etapa-n">' + escHTML(s.n) + '</span>' +
-          '<h4 class="etapa-title">' + escHTML(s.title) + '</h4>' +
-          '<p class="etapa-desc">' + escHTML(s.desc) + '</p>' +
-          '</div>';
-        var arrow = i < e.etapas.length - 1 ? '<span class="etapa-arrow" aria-hidden="true">' + arrowSVG() + '</span>' : "";
-        return step + arrow;
+      etapas.innerHTML = e.etapas.map(function (s) {
+        return '<article class="cycle-card reveal">' +
+          '<span class="cycle-n">' + escHTML(s.n) + '</span>' +
+          '<h4 class="cycle-title">' + escHTML(s.title) + '</h4>' +
+          '<p class="cycle-desc">' + escHTML(s.desc) + '</p>' +
+          '</article>';
       }).join("");
     }
 
@@ -135,201 +133,20 @@
           '</article>';
       }).join("");
     }
-
-    var featuresTitle = $("[data-features-title]");
-    if (featuresTitle && !featuresTitle.textContent.trim()) featuresTitle.textContent = cf.featuresTitle;
-    var featuresLede = $("[data-features-lede]");
-    if (featuresLede && !featuresLede.textContent.trim()) featuresLede.textContent = cf.featuresLede;
-
-    var features = $("[data-features]");
-    if (features && features.children.length === 0 && cf.features) {
-      features.innerHTML = cf.features.map(function (f) {
-        return '<article class="benefit-card reveal">' +
-          '<h3 class="benefit-title">' + escHTML(f.title) + '</h3>' +
-          '<p class="benefit-desc">' + escHTML(f.desc) + '</p>' +
-          '</article>';
-      }).join("");
-    }
   }
 
-  function mountModos() {
-    var m = data.modos;
-    if (!m) return;
-    var kicker = $("[data-modos-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = m.kicker;
-    var title = $("[data-modos-title]");
-    if (title && !title.textContent.trim()) title.textContent = m.title;
-    var lede = $("[data-modos-lede]");
-    if (lede && !lede.textContent.trim()) lede.textContent = m.lede;
+  function mountSoporte() {
+    var s = data.soporte;
+    if (!s) return;
+    var title = $("[data-soporte-title]");
+    if (title && !title.textContent.trim()) title.textContent = s.title;
 
-    var table = $("[data-modos-tabla]");
-    var tbody = table ? $("tbody", table) : null;
-    if (tbody && tbody.children.length === 0 && m.tabla) {
-      tbody.innerHTML = m.tabla.map(function (r) {
-        return "<tr><td>" + escHTML(r.modo) + "</td><td>" + escHTML(r.incluye) + "</td><td>" + escHTML(r.tiempo) + "</td></tr>";
+    var items = $("[data-soporte-items]");
+    if (items && items.children.length === 0 && s.items) {
+      items.innerHTML = s.items.map(function (it) {
+        return '<div class="brand-card reveal"><h3>' + escHTML(it.title) + '</h3><p>' + escHTML(it.desc) + '</p></div>';
       }).join("");
     }
-  }
-
-  function mountNumeros() {
-    var n = data.numeros;
-    if (!n) return;
-    var kicker = $("[data-numeros-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = n.kicker;
-    var title = $("[data-numeros-title]");
-    if (title && !title.textContent.trim()) title.textContent = n.title;
-    var consumoTitle = $("[data-consumo-title]");
-    if (consumoTitle && !consumoTitle.textContent.trim()) consumoTitle.textContent = n.consumoTitle;
-
-    var table = $("[data-consumo-tabla]");
-    var tbody = table ? $("tbody", table) : null;
-    if (tbody && tbody.children.length === 0 && n.consumo) {
-      tbody.innerHTML = n.consumo.map(function (r) {
-        return "<tr><td>" + escHTML(r.label) + "</td><td>" + escHTML(r.value) + "</td></tr>";
-      }).join("");
-    }
-
-    var calc = n.calculadora;
-    if (!calc) return;
-    var calcTitle = $("[data-calc-title]");
-    if (calcTitle && !calcTitle.textContent.trim()) calcTitle.textContent = calc.title;
-    var autosLabel = $("[data-calc-autos-label]");
-    if (autosLabel && !autosLabel.textContent.trim()) autosLabel.textContent = calc.autosLabel;
-    var precioLabel = $("[data-calc-precio-label]");
-    if (precioLabel && !precioLabel.textContent.trim()) precioLabel.textContent = calc.precioLabel;
-    var resultLabel = $("[data-calc-result-label]");
-    if (resultLabel && !resultLabel.textContent.trim()) resultLabel.textContent = calc.resultLabel;
-    var disclaimer = $("[data-calc-disclaimer]");
-    if (disclaimer && !disclaimer.textContent.trim()) disclaimer.textContent = calc.disclaimer;
-
-    var range = $("[data-calc-autos-range]");
-    if (range && !range.dataset.mounted) {
-      range.min = calc.autosMin;
-      range.max = calc.autosMax;
-      range.value = calc.autosDefault;
-      range.dataset.mounted = "1";
-    }
-    var precioInput = $("[data-calc-precio-input]");
-    if (precioInput && !precioInput.dataset.mounted) {
-      precioInput.value = calc.precioDefault;
-      precioInput.step = calc.precioStep;
-      precioInput.min = "0";
-      precioInput.dataset.mounted = "1";
-    }
-  }
-
-  function mountControl() {
-    var c = data.control;
-    if (!c) return;
-    var kicker = $("[data-control-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
-    var title = $("[data-control-title]");
-    if (title && !title.textContent.trim()) title.textContent = c.title;
-    var lede = $("[data-control-lede]");
-    if (lede && !lede.textContent.trim()) lede.textContent = c.lede;
-
-    var items = $("[data-control-items]");
-    if (items && items.children.length === 0 && c.items) {
-      items.innerHTML = c.items.map(function (it) {
-        return '<div class="contact-card reveal">' +
-          '<span class="label">' + escHTML(it.title) + '</span>' +
-          '<span class="value">' + escHTML(it.desc) + '</span>' +
-          '</div>';
-      }).join("");
-    }
-  }
-
-  function mountIncluye() {
-    var i = data.incluye;
-    if (!i) return;
-    var kicker = $("[data-incluye-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = i.kicker;
-    var title = $("[data-incluye-title]");
-    if (title && !title.textContent.trim()) title.textContent = i.title;
-
-    var items = $("[data-incluye-items]");
-    if (items && items.children.length === 0 && i.items) {
-      items.innerHTML = i.items.map(function (it) {
-        return '<li class="include-item reveal">' + checkSVG() + '<span>' + escHTML(it) + '</span></li>';
-      }).join("");
-    }
-
-    var panel = $("[data-personalizacion]");
-    var p = i.personalizacion;
-    if (panel && panel.children.length === 0 && p) {
-      panel.innerHTML =
-        '<h3 class="personalizacion-title">' + escHTML(p.title) + '</h3>' +
-        '<p class="personalizacion-intro">' + escHTML(p.intro) + '</p>' +
-        '<ul class="color-swatches">' +
-        (p.colores || []).map(function (c) {
-          return '<li class="color-swatch"><span class="color-dot" data-color="' + escHTML(c) + '"></span>' + escHTML(c) + '</li>';
-        }).join("") +
-        '</ul>' +
-        '<p class="personalizacion-marca">' + escHTML(p.marca) + '</p>';
-    }
-  }
-
-  function mountRespaldo() {
-    var r = data.respaldo;
-    if (!r) return;
-    var kicker = $("[data-respaldo-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = r.kicker;
-    var title = $("[data-respaldo-title]");
-    if (title && !title.textContent.trim()) title.textContent = r.title;
-
-    var comps = $("[data-respaldo-componentes]");
-    if (comps && comps.children.length === 0 && r.componentes) {
-      comps.innerHTML = r.componentes.map(function (c) {
-        return '<div class="spec-row reveal">' +
-          '<span class="spec-label">' + escHTML(c.label) + '</span>' +
-          '<span class="spec-value">' + escHTML(c.value) + '</span>' +
-          '</div>';
-      }).join("");
-    }
-
-    var highlights = $("[data-respaldo-highlights]");
-    if (highlights && highlights.children.length === 0 && r.highlights) {
-      highlights.innerHTML = r.highlights.map(function (h) {
-        return '<div class="brand-card reveal"><h3>' + escHTML(h.title) + '</h3><p>' + escHTML(h.desc) + '</p></div>';
-      }).join("");
-    }
-  }
-
-  function mountFAQ() {
-    var f = data.faq;
-    if (!f) return;
-    var kicker = $("[data-faq-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = f.kicker;
-    var title = $("[data-faq-title]");
-    if (title && !title.textContent.trim()) title.textContent = f.title;
-
-    var list = $("[data-faq-list]");
-    if (list && list.children.length === 0 && f.items) {
-      list.innerHTML = f.items.map(function (item, i) {
-        return '<div class="faq-item reveal" data-faq-item>' +
-          '<button type="button" class="faq-question" data-faq-toggle aria-expanded="false" aria-controls="faq-answer-' + i + '">' +
-          '<span>' + escHTML(item.q) + '</span>' +
-          '<span class="faq-icon" aria-hidden="true"></span>' +
-          '</button>' +
-          '<div class="faq-answer" id="faq-answer-' + i + '" data-faq-answer>' +
-          '<div class="faq-answer-inner">' + item.a + '</div>' +
-          '</div>' +
-          '</div>';
-      }).join("");
-    }
-  }
-
-  function mountContacto() {
-    var c = data.contacto;
-    if (!c) return;
-    var kicker = $("[data-contacto-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
-    var title = $("[data-contacto-title]");
-    if (title && !title.textContent.trim()) title.textContent = c.title;
-    var lede = $("[data-contacto-lede]");
-    if (lede && !lede.textContent.trim()) lede.textContent = c.lede;
-    var note = $("[data-contacto-whatsapp-note]");
-    if (note && !note.textContent.trim()) note.textContent = c.whatsappNote;
   }
 
   function mountContact() {
@@ -346,101 +163,6 @@
     if (number && !number.textContent.trim()) {
       number.textContent = c.whatsapp || c.whatsappDisplay || "WhatsApp (a confirmar)";
     }
-  }
-
-  function checkSVG() {
-    return '<svg class="include-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-  }
-
-  function arrowSVG() {
-    return '<svg viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrow-icon">' +
-      '<path d="M2 12H44M44 12L33 2M44 12L33 22" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
-      '</svg>';
-  }
-
-  /* ---------- Calculator ---------- */
-
-  function formatCurrency(n) {
-    try {
-      return "$" + Math.round(n).toLocaleString("es-AR");
-    } catch (e) {
-      return "$" + Math.round(n);
-    }
-  }
-
-  function initCalculator() {
-    var calc = $("[data-calculator]");
-    if (!calc) return;
-    var range = $("[data-calc-autos-range]", calc);
-    var autosValue = $("[data-calc-autos-value]", calc);
-    var precioInput = $("[data-calc-precio-input]", calc);
-    var resultValue = $("[data-calc-result-value]", calc);
-    if (!range || !precioInput || !resultValue) return;
-
-    var recompute = function () {
-      var autos = parseFloat(range.value) || 0;
-      var precio = parseFloat(precioInput.value) || 0;
-      if (autosValue) autosValue.textContent = String(Math.round(autos));
-      var total = autos * precio * 30;
-      resultValue.textContent = formatCurrency(total);
-    };
-
-    range.addEventListener("input", recompute);
-    precioInput.addEventListener("input", recompute);
-    recompute();
-  }
-
-  /* ---------- FAQ accordion ---------- */
-
-  function initFAQ() {
-    var items = $$("[data-faq-item]");
-    if (!items.length) return;
-    items.forEach(function (item) {
-      var toggle = $("[data-faq-toggle]", item);
-      if (!toggle) return;
-      toggle.addEventListener("click", function () {
-        var isOpen = item.classList.contains("is-open");
-        items.forEach(function (other) {
-          other.classList.remove("is-open");
-          var t = $("[data-faq-toggle]", other);
-          if (t) t.setAttribute("aria-expanded", "false");
-        });
-        if (!isOpen) {
-          item.classList.add("is-open");
-          toggle.setAttribute("aria-expanded", "true");
-        }
-      });
-    });
-  }
-
-  /* ---------- Contact form: builds a prefilled WhatsApp message ---------- */
-  /* Sitio estático sin backend: no hay dónde enviar el formulario, así que
-     al enviarlo armamos un mensaje de WhatsApp con los datos cargados y
-     abrimos wa.me con ese texto, en vez de hacer un POST a un servidor. */
-
-  function initContactForm() {
-    var form = $("[data-contact-form]");
-    if (!form) return;
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
-      var fd = new FormData(form);
-      var nombre = (fd.get("nombre") || "").toString().trim();
-      var telefono = (fd.get("telefono") || "").toString().trim();
-      var negocio = (fd.get("negocio") || "").toString().trim();
-      var ubicacion = (fd.get("ubicacion") || "").toString().trim();
-
-      var lines = [
-        "Hola, quiero información sobre la M-LM535.",
-        "Nombre: " + nombre,
-        "Teléfono: " + telefono,
-        "Tipo de negocio: " + negocio,
-        "Ubicación: " + ubicacion
-      ];
-      var msg = encodeURIComponent(lines.join("\n"));
-      var whatsapp = (data.contact || {}).whatsapp;
-      if (!whatsapp) return;
-      window.open("https://wa.me/" + digitsOnly(whatsapp) + "?text=" + msg, "_blank", "noopener");
-    });
   }
 
   /* ---------- Nav ---------- */
@@ -565,21 +287,12 @@
     safe(mountOportunidad, "mountOportunidad");
     safe(mountEquipo, "mountEquipo");
     safe(mountComoFunciona, "mountComoFunciona");
-    safe(mountModos, "mountModos");
-    safe(mountNumeros, "mountNumeros");
-    safe(mountControl, "mountControl");
-    safe(mountIncluye, "mountIncluye");
-    safe(mountRespaldo, "mountRespaldo");
-    safe(mountFAQ, "mountFAQ");
-    safe(mountContacto, "mountContacto");
+    safe(mountSoporte, "mountSoporte");
     safe(mountContact, "mountContact");
 
     safe(initNav, "initNav");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
-    safe(initCalculator, "initCalculator");
-    safe(initFAQ, "initFAQ");
-    safe(initContactForm, "initContactForm");
     safe(initTilt, "initTilt");
 
     if (window.gsap && window.ScrollTrigger) {
