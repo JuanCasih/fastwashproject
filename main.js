@@ -23,7 +23,9 @@
     var h = data.hero;
     if (!h) return;
     var title = $("[data-hero-title]");
-    if (title && !title.textContent.trim()) title.textContent = h.title;
+    if (title && !title.textContent.trim() && h.titleLines) {
+      title.innerHTML = h.titleLines.map(escHTML).join("<br>");
+    }
     var sub = $("[data-hero-sub]");
     if (sub && !sub.textContent.trim()) sub.textContent = h.sub;
     var secondary = $("[data-hero-cta-secondary]");
@@ -32,8 +34,9 @@
     var stats = $("[data-hero-stats]");
     if (stats && stats.children.length === 0 && h.stats) {
       stats.innerHTML = h.stats.map(function (s) {
+        var prefix = s.prefix ? '<span class="hero-stat-prefix">' + escHTML(s.prefix) + '</span> ' : "";
         return '<div class="hero-stat reveal">' +
-          '<span class="hero-stat-value">' + escHTML(s.value) + '</span>' +
+          '<span class="hero-stat-value">' + prefix + escHTML(s.value) + '</span>' +
           '<span class="hero-stat-unit">' + escHTML(s.unit) + '</span>' +
           '</div>';
       }).join("");
