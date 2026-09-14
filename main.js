@@ -78,39 +78,43 @@
     }
   }
 
-  function mountCombo() {
-    var c = data.combo;
-    if (!c) return;
-    var kicker = $("[data-combo-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = c.kicker;
-    var title = $("[data-combo-title]");
-    if (title && !title.textContent.trim()) title.textContent = c.title;
-    var intro = $("[data-combo-intro]");
-    if (intro && !intro.textContent.trim()) intro.textContent = c.intro;
+  function mountEquipo() {
+    var e = data.equipo;
+    if (!e) return;
+    var title = $("[data-equipo-title]");
+    if (title && !title.textContent.trim()) title.textContent = e.title;
 
-    var maquinas = $("[data-combo-maquinas]");
-    if (maquinas && maquinas.children.length === 0 && c.maquinas) {
-      maquinas.innerHTML = c.maquinas.map(function (m) {
-        return '<article class="combo-card reveal">' +
-          '<span class="combo-card-name">' + escHTML(m.nombre) + '</span>' +
-          '<h3 class="combo-card-role">' + escHTML(m.rol) + '</h3>' +
-          '<p class="combo-card-desc">' + escHTML(m.desc) + '</p>' +
-          '</article>';
-      }).join("");
-    }
+    var diagramImg = $("[data-equipo-diagram-img]");
+    if (diagramImg && !diagramImg.getAttribute("alt")) diagramImg.setAttribute("alt", e.diagramAlt);
 
-    var specsTitle = $("[data-combo-specs-title]");
-    if (specsTitle && !specsTitle.textContent.trim()) specsTitle.textContent = c.tt303SpecsTitle;
-
-    var specs = $("[data-combo-specs]");
-    if (specs && specs.children.length === 0 && c.tt303Specs) {
-      specs.innerHTML = c.tt303Specs.map(function (s) {
-        return '<div class="spec-row reveal">' +
-          '<span class="spec-label">' + escHTML(s.label) + '</span>' +
-          '<span class="spec-value">' + escHTML(s.value) + '</span>' +
+    var datos = $("[data-equipo-datos]");
+    if (datos && datos.children.length === 0 && e.datos) {
+      datos.innerHTML = e.datos.map(function (d) {
+        return '<div class="equipo-dato reveal">' +
+          '<span class="equipo-dato-value">' + escHTML(d.value) + '</span>' +
+          '<span class="equipo-dato-desc">' + escHTML(d.desc) + '</span>' +
           '</div>';
       }).join("");
     }
+
+    var etapasSubtitle = $("[data-equipo-etapas-subtitle]");
+    if (etapasSubtitle && !etapasSubtitle.textContent.trim()) etapasSubtitle.textContent = e.etapasSubtitle;
+
+    var etapas = $("[data-equipo-etapas]");
+    if (etapas && etapas.children.length === 0 && e.etapas) {
+      etapas.innerHTML = e.etapas.map(function (s, i) {
+        var step = '<div class="etapa-step reveal">' +
+          '<span class="etapa-n">' + escHTML(s.n) + '</span>' +
+          '<h4 class="etapa-title">' + escHTML(s.title) + '</h4>' +
+          '<p class="etapa-desc">' + escHTML(s.desc) + '</p>' +
+          '</div>';
+        var arrow = i < e.etapas.length - 1 ? '<span class="etapa-arrow" aria-hidden="true">' + arrowSVG() + '</span>' : "";
+        return step + arrow;
+      }).join("");
+    }
+
+    var etapasClosing = $("[data-equipo-etapas-closing]");
+    if (etapasClosing && !etapasClosing.textContent.trim()) etapasClosing.textContent = e.etapasClosing;
   }
 
   function mountComoFunciona() {
@@ -348,6 +352,12 @@
     return '<svg class="include-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   }
 
+  function arrowSVG() {
+    return '<svg viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrow-icon">' +
+      '<path d="M2 12H44M44 12L33 2M44 12L33 22" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>';
+  }
+
   /* ---------- Calculator ---------- */
 
   function formatCurrency(n) {
@@ -553,7 +563,7 @@
     safe(mountHero, "mountHero");
     safe(mountMarquee, "mountMarquee");
     safe(mountOportunidad, "mountOportunidad");
-    safe(mountCombo, "mountCombo");
+    safe(mountEquipo, "mountEquipo");
     safe(mountComoFunciona, "mountComoFunciona");
     safe(mountModos, "mountModos");
     safe(mountNumeros, "mountNumeros");

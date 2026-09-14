@@ -444,7 +444,7 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 .cycle-desc { color: var(--ink-mute); font-size: .92rem; }
 
 /* =============================================================
-   9. Specs panel (reused: combo TT-303 / respaldo técnico)
+   9. Specs panel (reused: respaldo técnico)
    ============================================================= */
 .specs-panel {
   background: var(--bg-navy);
@@ -565,37 +565,79 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 }
 
 /* =============================================================
-   11. Combo (M-LM535 + TT-303)
+   11. El equipo y el espacio
    ============================================================= */
-.combo-grid {
+.equipo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+.equipo-diagram img { width: 100%; height: auto; display: block; border-radius: var(--radius); }
+.equipo-datos { display: flex; flex-direction: column; gap: 1.5rem; }
+.equipo-dato { padding-block: 1rem; border-bottom: 1px solid var(--line); }
+.equipo-dato:last-child { border-bottom: 0; }
+.equipo-dato-value {
+  display: block;
+  font-family: var(--display);
+  text-transform: uppercase;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  color: var(--accent-2);
+  line-height: 1.15;
+}
+.equipo-dato-desc { display: block; margin-top: .3rem; color: var(--ink-mute); font-size: .92rem; }
+
+@media (min-width: 1024px) {
+  .equipo-grid { grid-template-columns: 1.1fr 1fr; gap: 3.5rem; }
+}
+
+.equipo-etapas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1rem 1.2rem;
   margin-top: 2.5rem;
 }
-.combo-card {
-  background: var(--cream);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 2rem 1.7rem;
+.etapa-step {
+  flex: 1 1 180px;
+  max-width: 240px;
+  text-align: center;
 }
-.combo-card:first-child { border: 2px solid var(--accent); }
-.combo-card-name {
-  display: inline-block;
+.etapa-n {
+  display: block;
+  font-family: var(--display);
+  font-size: 2rem;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--accent);
+  margin-bottom: .5rem;
+}
+.etapa-title {
   font-family: var(--display);
   text-transform: uppercase;
-  font-size: .8rem;
-  letter-spacing: .1em;
-  color: var(--accent-2);
-  margin-bottom: .8rem;
+  font-size: 1.05rem;
+  letter-spacing: .01em;
+  margin-bottom: .4rem;
 }
-.combo-card-role {
-  font-family: var(--display);
-  text-transform: uppercase;
-  font-size: 1.3rem;
-  margin-bottom: .6rem;
+.etapa-desc { color: var(--ink-mute); font-size: .88rem; }
+.etapa-arrow {
+  display: flex; align-self: center; flex: 0 0 auto;
+  color: var(--accent);
 }
-.combo-card-desc { color: var(--ink-mute); font-size: .95rem; }
+.etapa-arrow .arrow-icon { width: 1.8em; }
+.equipo-etapas-closing {
+  margin-top: 2rem;
+  text-align: center;
+  color: var(--ink-mute);
+  font-size: .9rem;
+}
+
+@media (max-width: 768px) {
+  .equipo-etapas { flex-direction: column; align-items: center; }
+  .etapa-step { max-width: 320px; }
+  .etapa-arrow { transform: rotate(90deg); }
+}
 
 /* =============================================================
    12. Brand cards (reused: respaldo técnico highlights)
