@@ -503,6 +503,18 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 /* =============================================================
    10.5 Profile cards (para qué tipo de negocio sirve)
    ============================================================= */
+.profile-section-title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  text-align: center;
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  line-height: 1.05;
+  color: var(--accent-2);
+  max-width: 22ch;
+  margin-inline: auto;
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+}
 .profile-grid {
   display: grid;
   grid-template-columns: 1fr;

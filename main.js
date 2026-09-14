@@ -57,18 +57,6 @@
   function mountOportunidad() {
     var o = data.oportunidad;
     if (!o) return;
-    var kicker = $("[data-oportunidad-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = o.kicker;
-    var title = $("[data-oportunidad-title]");
-    if (title && !title.textContent.trim()) title.textContent = o.title;
-
-    var parrafos = $("[data-oportunidad-parrafos]");
-    if (parrafos && parrafos.children.length === 0 && o.parrafos) {
-      parrafos.innerHTML = o.parrafos.map(function (p, i) {
-        return '<p class="section-lede reveal"' + (i > 0 ? ' style="margin-top:1rem;"' : "") + '>' + escHTML(p) + '</p>';
-      }).join("");
-    }
-
     var perfilesTitle = $("[data-oportunidad-perfiles-title]");
     if (perfilesTitle && !perfilesTitle.textContent.trim()) perfilesTitle.textContent = o.perfilesTitle;
 
