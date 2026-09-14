@@ -310,7 +310,7 @@ html.nav-open .nav-toggle .icon-close { display: block; }
   max-width: 52ch;
   color: rgba(255,255,255,.86);
 }
-.hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 2.6rem; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: clamp(1.8rem, 4vw, 2.4rem); }
 
 .scroll-hint {
   position: absolute; bottom: 1.6rem; left: 50%; transform: translateX(-50%);
@@ -322,39 +322,53 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 @keyframes bobArrow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(8px); } }
 @media (prefers-reduced-motion: reduce) { .scroll-hint svg { animation: none; } }
 
-/* ---- Hero stats (3 datos destacados) ---- */
-.hero-stats {
+/* ---- Hero stats band (franja completa, 3 datos destacados) ---- */
+.hero-stats-band {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
-  margin-top: clamp(2.8rem, 6vw, 3.8rem);
-  padding-top: clamp(1.8rem, 4vw, 2.4rem);
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  padding-block: clamp(2rem, 4vw, 2.8rem);
   border-top: 1px solid var(--line-on-navy);
-  max-width: 640px;
+  border-bottom: 1px solid var(--line-on-navy);
 }
-.hero-stat { display: flex; flex-direction: column; gap: .3rem; }
+.hero-stat {
+  display: flex; flex-direction: column; align-items: center;
+  gap: .4rem;
+  text-align: center;
+  padding-inline: clamp(.75rem, 2vw, 1.5rem);
+  border-right: 1px solid var(--line-on-navy);
+}
+.hero-stat:last-child { border-right: 0; }
 .hero-stat-value {
   font-family: var(--display);
   text-transform: uppercase;
-  font-size: clamp(1.7rem, 4vw, 2.8rem);
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
   color: var(--accent);
   line-height: 1;
 }
 .hero-stat-prefix {
-  font-size: .38em;
+  font-size: .34em;
   letter-spacing: .02em;
   color: rgba(255,255,255,.7);
   text-transform: uppercase;
 }
 .hero-stat-unit {
-  font-size: .8rem;
+  font-size: .85rem;
   letter-spacing: .03em;
   color: rgba(255,255,255,.72);
 }
 
-@media (max-width: 480px) {
-  .hero-stats { grid-template-columns: repeat(3, 1fr); gap: .8rem; }
-  .hero-stat-value { font-size: clamp(1.3rem, 7vw, 1.7rem); }
+@media (max-width: 768px) {
+  .hero-stats-band {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .hero-stat {
+    border-right: 0;
+    padding-block: 1rem;
+    border-bottom: 1px solid var(--line-on-navy);
+  }
+  .hero-stat:last-child { border-bottom: 0; }
 }
 
 /* =============================================================
