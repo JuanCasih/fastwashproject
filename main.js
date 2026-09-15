@@ -115,6 +115,67 @@
     if (etapasClosing && !etapasClosing.textContent.trim()) etapasClosing.textContent = e.etapasClosing;
   }
 
+  function setColorPreview(opt) {
+    var img = $("[data-color-preview-img]");
+    var source = $("[data-color-preview-source]");
+    if (!img || !opt) return;
+    if (source) source.setAttribute("srcset", "assets/img/" + opt.file + ".webp");
+    img.setAttribute("src", "assets/img/" + opt.file + ".png");
+    img.setAttribute("alt", "Equipo en color " + opt.name);
+  }
+
+  function mountColorPicker() {
+    var e = data.equipo;
+    var cp = e && e.colorPicker;
+    if (!cp) return;
+
+    var subtitle = $("[data-color-picker-subtitle]");
+    if (subtitle && !subtitle.textContent.trim()) subtitle.textContent = cp.subtitle;
+    var closing = $("[data-color-picker-closing]");
+    if (closing && !closing.textContent.trim()) closing.textContent = cp.closing;
+
+    var swatches = $("[data-color-swatches]");
+    if (swatches && swatches.children.length === 0 && cp.options) {
+      swatches.innerHTML = cp.options.map(function (o) {
+        return '<button type="button" class="color-swatch" style="--swatch:' + escHTML(o.hex) + '" ' +
+          'data-color-file="' + escHTML(o.file) + '" aria-label="' + escHTML(o.name) + '" ' +
+          'aria-pressed="' + (o.isDefault ? "true" : "false") + '"></button>';
+      }).join("");
+    }
+
+    var defaultOpt = cp.options.filter(function (o) { return o.isDefault; })[0] || cp.options[0];
+    var img = $("[data-color-preview-img]");
+    if (img && !img.getAttribute("src")) setColorPreview(defaultOpt);
+  }
+
+  function initColorPicker() {
+    var wrap = $("[data-color-swatches]");
+    var cp = (data.equipo || {}).colorPicker;
+    if (!wrap || !cp) return;
+    var img = $("[data-color-preview-img]");
+
+    wrap.addEventListener("click", function (e) {
+      var btn = e.target.closest && e.target.closest(".color-swatch");
+      if (!btn || !img) return;
+      var file = btn.getAttribute("data-color-file");
+      var opt = cp.options.filter(function (o) { return o.file === file; })[0];
+      if (!opt || btn.getAttribute("aria-pressed") === "true") return;
+
+      $$(".color-swatch", wrap).forEach(function (b) { b.setAttribute("aria-pressed", "false"); });
+      btn.setAttribute("aria-pressed", "true");
+
+      if (reduced) {
+        setColorPreview(opt);
+        return;
+      }
+      img.classList.add("is-fading");
+      setTimeout(function () {
+        setColorPreview(opt);
+        img.classList.remove("is-fading");
+      }, 180);
+    });
+  }
+
   function mountComoFunciona() {
     var cf = data.comoFunciona;
     if (!cf) return;
@@ -149,6 +210,38 @@
     }
   }
 
+  function mountAutoservicio() {
+    var a = data.autoservicio;
+    if (!a) return;
+    var title = $("[data-autoservicio-title]");
+    if (title && !title.textContent.trim()) title.textContent = a.title;
+    var img = $("[data-autoservicio-img]");
+    if (img && !img.getAttribute("alt")) img.setAttribute("alt", a.imageAlt);
+    var heading = $("[data-autoservicio-heading]");
+    if (heading && !heading.textContent.trim()) heading.textContent = a.heading;
+
+    var parrafos = $("[data-autoservicio-parrafos]");
+    if (parrafos && parrafos.children.length === 0 && a.parrafos) {
+      parrafos.innerHTML = a.parrafos.map(function (p) {
+        return '<p class="autoservicio-desc">' + escHTML(p) + '</p>';
+      }).join("");
+    }
+
+    var features = $("[data-autoservicio-features]");
+    if (features && features.children.length === 0 && a.features) {
+      features.innerHTML = a.features.map(function (f) {
+        return '<li class="autoservicio-feature">' + checkSVG() + '<span>' + escHTML(f) + '</span></li>';
+      }).join("");
+    }
+
+    var priceNote = $("[data-autoservicio-price-note]");
+    if (priceNote && !priceNote.textContent.trim()) priceNote.textContent = a.priceNote;
+  }
+
+  function checkSVG() {
+    return '<svg class="autoservicio-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 12l5 5L20 6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
   function mountPrecios() {
     var p = data.precios;
     if (!p) return;
@@ -158,6 +251,8 @@
     if (value && !value.textContent.trim()) value.textContent = p.value;
     var desc = $("[data-precios-desc]");
     if (desc && !desc.textContent.trim()) desc.textContent = p.desc;
+    var autoservicioNote = $("[data-precios-autoservicio-note]");
+    if (autoservicioNote && !autoservicioNote.textContent.trim()) autoservicioNote.textContent = p.autoservicioNote;
     var plazoValue = $("[data-precios-plazo-value]");
     if (plazoValue && !plazoValue.textContent.trim()) plazoValue.textContent = p.plazoValue;
     var plazoDesc = $("[data-precios-plazo-desc]");
@@ -323,14 +418,17 @@
     safe(mountMarquee, "mountMarquee");
     safe(mountOportunidad, "mountOportunidad");
     safe(mountEquipo, "mountEquipo");
+    safe(mountColorPicker, "mountColorPicker");
     safe(mountComoFunciona, "mountComoFunciona");
     safe(mountSoporte, "mountSoporte");
     safe(mountPrecios, "mountPrecios");
+    safe(mountAutoservicio, "mountAutoservicio");
     safe(mountContact, "mountContact");
 
     safe(initNav, "initNav");
     safe(initSmoothScroll, "initSmoothScroll");
     safe(initReveals, "initReveals");
+    safe(initColorPicker, "initColorPicker");
     safe(initTilt, "initTilt");
 
     if (window.gsap && window.ScrollTrigger) {
