@@ -176,26 +176,6 @@
     });
   }
 
-  function mountComoFunciona() {
-    var cf = data.comoFunciona;
-    if (!cf) return;
-    var kicker = $("[data-como-funciona-kicker]");
-    if (kicker && !kicker.textContent.trim()) kicker.textContent = cf.kicker;
-    var title = $("[data-como-funciona-title]");
-    if (title && !title.textContent.trim()) title.textContent = cf.title;
-
-    var pasos = $("[data-como-funciona-pasos]");
-    if (pasos && pasos.children.length === 0 && cf.pasos) {
-      pasos.innerHTML = cf.pasos.map(function (p) {
-        return '<article class="cycle-card reveal">' +
-          '<span class="cycle-n">' + escHTML(p.n) + '</span>' +
-          '<h3 class="cycle-title">' + escHTML(p.title) + '</h3>' +
-          '<p class="cycle-desc">' + escHTML(p.desc) + '</p>' +
-          '</article>';
-      }).join("");
-    }
-  }
-
   function mountSoporte() {
     var s = data.soporte;
     if (!s) return;
@@ -219,6 +199,8 @@
     if (img && !img.getAttribute("alt")) img.setAttribute("alt", a.imageAlt);
     var heading = $("[data-autoservicio-heading]");
     if (heading && !heading.textContent.trim()) heading.textContent = a.heading;
+    var lead = $("[data-autoservicio-lead]");
+    if (lead && !lead.textContent.trim()) lead.textContent = a.lead;
 
     var parrafos = $("[data-autoservicio-parrafos]");
     if (parrafos && parrafos.children.length === 0 && a.parrafos) {
@@ -419,7 +401,6 @@
     safe(mountOportunidad, "mountOportunidad");
     safe(mountEquipo, "mountEquipo");
     safe(mountColorPicker, "mountColorPicker");
-    safe(mountComoFunciona, "mountComoFunciona");
     safe(mountSoporte, "mountSoporte");
     safe(mountPrecios, "mountPrecios");
     safe(mountAutoservicio, "mountAutoservicio");
