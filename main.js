@@ -149,6 +149,43 @@
     }
   }
 
+  function mountPrecios() {
+    var p = data.precios;
+    if (!p) return;
+    var title = $("[data-precios-title]");
+    if (title && !title.textContent.trim()) title.textContent = p.title;
+    var value = $("[data-precios-value]");
+    if (value && !value.textContent.trim()) value.textContent = p.value;
+    var desc = $("[data-precios-desc]");
+    if (desc && !desc.textContent.trim()) desc.textContent = p.desc;
+    var plazoValue = $("[data-precios-plazo-value]");
+    if (plazoValue && !plazoValue.textContent.trim()) plazoValue.textContent = p.plazoValue;
+    var plazoDesc = $("[data-precios-plazo-desc]");
+    if (plazoDesc && !plazoDesc.textContent.trim()) plazoDesc.textContent = p.plazoDesc;
+    var closing = $("[data-precios-closing]");
+    if (closing && !closing.textContent.trim()) closing.textContent = p.closing;
+    var cta = $("[data-precios-cta]");
+    if (cta && !cta.textContent.trim()) cta.textContent = p.ctaLabel;
+
+    var timeline = $("[data-precios-timeline]");
+    if (timeline && timeline.children.length === 0 && p.timeline) {
+      timeline.innerHTML = p.timeline.map(function (t, i) {
+        var step = '<div class="timeline-step reveal">' +
+          '<span class="timeline-amount">' + escHTML(t.monto) + '</span>' +
+          '<span class="timeline-label">' + escHTML(t.momento) + '</span>' +
+          '</div>';
+        var arrow = i < p.timeline.length - 1 ? '<span class="timeline-arrow" aria-hidden="true">' + arrowSVG() + '</span>' : "";
+        return step + arrow;
+      }).join("");
+    }
+  }
+
+  function arrowSVG() {
+    return '<svg viewBox="0 0 48 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="arrow-icon">' +
+      '<path d="M2 12H44M44 12L33 2M44 12L33 22" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '</svg>';
+  }
+
   function mountContact() {
     var c = data.contact || {};
     $$("[data-contact-whatsapp]").forEach(function (el) {
@@ -288,6 +325,7 @@
     safe(mountEquipo, "mountEquipo");
     safe(mountComoFunciona, "mountComoFunciona");
     safe(mountSoporte, "mountSoporte");
+    safe(mountPrecios, "mountPrecios");
     safe(mountContact, "mountContact");
 
     safe(initNav, "initNav");
