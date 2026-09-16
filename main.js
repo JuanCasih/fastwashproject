@@ -124,10 +124,20 @@
     img.setAttribute("alt", "Equipo en color " + opt.name);
   }
 
+  function preloadColorImages(cp) {
+    if (!cp || !cp.options) return;
+    cp.options.forEach(function (o) {
+      new Image().src = "assets/img/" + o.file + ".webp";
+      new Image().src = "assets/img/" + o.file + ".png";
+    });
+  }
+
   function mountColorPicker() {
     var e = data.equipo;
     var cp = e && e.colorPicker;
     if (!cp) return;
+
+    preloadColorImages(cp);
 
     var introTitle = $("[data-color-intro-title]");
     if (introTitle && !introTitle.textContent.trim()) introTitle.textContent = cp.introTitle;

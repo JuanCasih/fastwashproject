@@ -574,7 +574,7 @@ html.nav-open .nav-toggle .icon-close { display: block; }
   text-transform: uppercase;
   font-size: clamp(1.3rem, 2.2vw, 1.7rem);
   letter-spacing: .01em;
-  color: var(--ink);
+  color: var(--accent-2);
   margin-bottom: .9rem;
 }
 .equipo-color-intro-desc { color: var(--ink-mute); font-size: 1rem; max-width: 46ch; }
@@ -587,10 +587,7 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 }
 
 .color-picker { display: flex; flex-direction: column; }
-.color-picker-preview {
-  width: 100%;
-  margin: 0 auto 2rem;
-}
+.color-picker-preview { width: 100%; }
 .color-picker-preview img {
   width: 100%; height: auto; display: block;
   transition: opacity .18s var(--ease-out);
@@ -601,8 +598,9 @@ html.nav-open .nav-toggle .icon-close { display: block; }
 .color-swatches-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1.15rem;
+  margin-top: 1.6rem;
 }
 .color-swatch {
   width: 48px; height: 48px;
@@ -618,12 +616,10 @@ html.nav-open .nav-toggle .icon-close { display: block; }
   box-shadow: 0 0 0 3px var(--bg-2), 0 0 0 5px var(--accent-2);
 }
 .color-picker-closing {
-  margin-top: 2rem;
-  text-align: center;
+  margin-top: 1.4rem;
   color: var(--ink-mute);
   font-size: .92rem;
-  max-width: 40ch;
-  margin-inline: auto;
+  max-width: 46ch;
 }
 
 @media (prefers-reduced-motion: reduce) {
