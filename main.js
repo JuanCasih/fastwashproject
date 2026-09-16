@@ -129,8 +129,10 @@
     var cp = e && e.colorPicker;
     if (!cp) return;
 
-    var subtitle = $("[data-color-picker-subtitle]");
-    if (subtitle && !subtitle.textContent.trim()) subtitle.textContent = cp.subtitle;
+    var introTitle = $("[data-color-intro-title]");
+    if (introTitle && !introTitle.textContent.trim()) introTitle.textContent = cp.introTitle;
+    var introDesc = $("[data-color-intro-desc]");
+    if (introDesc && !introDesc.textContent.trim()) introDesc.textContent = cp.introDesc;
     var closing = $("[data-color-picker-closing]");
     if (closing && !closing.textContent.trim()) closing.textContent = cp.closing;
 
